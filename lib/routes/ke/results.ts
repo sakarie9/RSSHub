@@ -1,6 +1,6 @@
-import { Route } from '@/types';
-import { parseDate } from '@/utils/parse-date';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/researchResults',
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.research.ke.com/researchResults'],
-    },
+    radar: [
+        {
+            source: ['www.research.ke.com/researchResults'],
+        },
+    ],
     name: '研究成果',
     maintainers: ['shaomingbo'],
     handler,

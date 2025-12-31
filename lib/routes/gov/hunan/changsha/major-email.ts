@@ -1,9 +1,11 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 const baseUrl = 'http://wlwz.changsha.gov.cn';
 
 export const route: Route = {
@@ -19,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['wlwz.changsha.gov.cn/webapp/cs2020/email/*'],
-    },
+    radar: [
+        {
+            source: ['wlwz.changsha.gov.cn/webapp/cs2020/email/*'],
+        },
+    ],
     name: '长沙市人民政府',
     maintainers: ['shansing'],
     handler,
@@ -40,7 +44,8 @@ async function handler() {
     const $ = load(listPage.data);
     const list = $('.table1 tbody tr')
         .slice(1)
-        .map((_, tr) => {
+        .toArray()
+        .map((tr) => {
             tr = $(tr);
 
             return {
@@ -48,8 +53,7 @@ async function handler() {
                 link: baseUrl + tr.find('td[title] > a').attr('href'),
                 author: tr.find('td:last').text(),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

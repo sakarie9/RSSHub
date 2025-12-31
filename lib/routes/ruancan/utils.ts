@@ -1,9 +1,10 @@
+import { load } from 'cheerio';
+
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
-export default async (ctx, currentUrl) => {
+const fetchFeed = async (ctx, currentUrl) => {
     const rootUrl = 'https://www.ruancan.com';
     currentUrl = `${rootUrl}${currentUrl}`;
 
@@ -65,3 +66,4 @@ export default async (ctx, currentUrl) => {
         item: items,
     };
 };
+export default fetchFeed;

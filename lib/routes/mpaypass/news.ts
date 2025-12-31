@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['mpaypass.com.cn/'],
-    },
+    radar: [
+        {
+            source: ['mpaypass.com.cn/'],
+        },
+    ],
     name: '新闻',
     maintainers: ['LogicJake', 'genghis-yang'],
     handler,
@@ -37,7 +40,8 @@ async function handler() {
         language: 'zh-CN',
         item: await Promise.all(
             $list('.Newslist-li')
-                .map((_, el) => {
+                .toArray()
+                .map((el) => {
                     const $el = $list(el);
                     const $a = $el.find('.Newslist-title a');
                     const href = $a.attr('href');
@@ -57,7 +61,6 @@ async function handler() {
                         };
                     });
                 })
-                .get()
         ),
     };
 }

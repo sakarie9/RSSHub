@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { apiUrl, baseUrl, getBParam, getBuildId, getGToken, parseList, parseItem } from './utils';
+
+import { apiUrl, baseUrl, getBParam, getBuildId, getGToken, parseItem, parseList } from './utils';
 
 export const route: Route = {
     path: '/tag/:tagId/:lang?',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['followin.io/:lang/tag/:tagId', 'followin.io/tag/:tagId'],
-    },
+    radar: [
+        {
+            source: ['followin.io/:lang/tag/:tagId', 'followin.io/tag/:tagId'],
+        },
+    ],
     name: 'Tag',
     maintainers: ['TonyRL'],
     handler,

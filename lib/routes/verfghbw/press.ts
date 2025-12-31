@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,10 +17,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['verfgh.baden-wuerttemberg.de/de/presse-und-service/pressemitteilungen/'],
-        target: '/press',
-    },
+    radar: [
+        {
+            source: ['verfgh.baden-wuerttemberg.de/de/presse-und-service/pressemitteilungen/'],
+            target: '/press',
+        },
+    ],
     name: 'Press releases',
     maintainers: ['quinn-dev'],
     handler,
@@ -56,7 +59,8 @@ async function handler(ctx) {
     const $ = load(data);
 
     const list = $('.pressListItem')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             const title = item.find('.pressListItemTeaser > h3').text().trim();
@@ -70,8 +74,7 @@ async function handler(ctx) {
                 description: item.find('.pressListItemTeaser').html(),
                 pubDate: parseDate(item.find('.pressListItemDate > span').text(), 'DD.MM.YYYY'),
             };
-        })
-        .get();
+        });
 
     return {
         title: 'Verfassungsgerichtshof Baden-Württemberg - Pressemitteilungen',

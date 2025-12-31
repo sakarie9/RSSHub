@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const host = 'https://yz.chsi.com.cn';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yz.chsi.com.cn/'],
-    },
+    radar: [
+        {
+            source: ['yz.chsi.com.cn/'],
+        },
+    ],
     name: '考研热点新闻',
     maintainers: ['yanbot-team'],
     handler,

@@ -1,14 +1,18 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['howtoforge.com/'],
-        target: '',
-    },
-    name: 'Unknown',
+    categories: ['study'],
+    example: '/howtoforge',
+    radar: [
+        {
+            source: ['howtoforge.com/'],
+        },
+    ],
+    name: 'Tutorials',
     maintainers: ['cnkmmk'],
     handler,
     url: 'howtoforge.com/',
@@ -21,7 +25,8 @@ async function handler() {
     const titleMain = $('channel > title').text();
     const descriptionMain = $('channel > description').text();
     const items = $('channel > item')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             const $item = $(item);
             const link = $item.find('link').text();
             const title = $item.find('title').text();
@@ -33,8 +38,7 @@ async function handler() {
                 title,
                 description,
             };
-        })
-        .get();
+        });
 
     return {
         title: titleMain,

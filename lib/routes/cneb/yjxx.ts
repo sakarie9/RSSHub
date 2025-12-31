@@ -1,15 +1,17 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import { getSubPath } from '@/utils/common-utils';
 import got from '@/utils/got';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/yjxx/*',
-    radar: {
-        source: ['cneb.gov.cn/yjxx', 'cneb.gov.cn/'],
-        target: '/yjxx',
-    },
+    radar: [
+        {
+            source: ['cneb.gov.cn/yjxx', 'cneb.gov.cn/'],
+            target: '/yjxx',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

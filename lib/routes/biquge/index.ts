@@ -1,12 +1,15 @@
-import { Route } from '@/types';
-import { getSubPath } from '@/utils/common-utils';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
-import timezone from '@/utils/timezone';
-import { parseDate } from '@/utils/parse-date';
+
 import { config } from '@/config';
+import ConfigNotFoundError from '@/errors/types/config-not-found';
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import { getSubPath } from '@/utils/common-utils';
+import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
+
 const allowHost = new Set([
     'www.xbiquwx.la',
     'www.biqu5200.net',
@@ -36,7 +39,7 @@ async function handler(ctx) {
     const rootUrl = getSubPath(ctx).split('/').slice(1, 4).join('/');
     const currentUrl = getSubPath(ctx).slice(1);
     if (!config.feature.allow_user_supply_unsafe_domain && !allowHost.has(new URL(rootUrl).hostname)) {
-        throw new Error(`This RSS is disabled unless 'ALLOW_USER_SUPPLY_UNSAFE_DOMAIN' is set to 'true'.`);
+        throw new ConfigNotFoundError(`This RSS is disabled unless 'ALLOW_USER_SUPPLY_UNSAFE_DOMAIN' is set to 'true'.`);
     }
 
     const response = await got({
@@ -57,7 +60,7 @@ async function handler(ctx) {
 
     let items = $('dl dd a')
         .toArray()
-        .reverse()
+        .toReversed()
         .slice(0, ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit')) : 1)
         .map((item) => {
             item = $(item);

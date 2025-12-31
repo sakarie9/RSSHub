@@ -1,13 +1,16 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import buildData from '@/utils/common-config';
+
 const baseUrl = 'https://www.iiilab.com/';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['www.iiilab.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['www.iiilab.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['Joey'],
     handler,

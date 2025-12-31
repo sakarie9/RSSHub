@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 /* 研究生招生网通知公告*/
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yz.cuc.edu.cn/8549/list.htm', 'yz.cuc.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['yz.cuc.edu.cn/8549/list.htm', 'yz.cuc.edu.cn/'],
+        },
+    ],
     name: '研究生招生网',
     maintainers: ['niuyi1017'],
     handler,

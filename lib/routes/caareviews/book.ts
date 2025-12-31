@@ -1,5 +1,6 @@
-import { Route } from '@/types';
-import { rootUrl, getList, getItems } from './utils';
+import type { Route } from '@/types';
+
+import { getItems, getList, rootUrl } from './utils';
 
 export const route: Route = {
     path: '/book',
@@ -14,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['caareviews.org/reviews/book'],
-    },
+    radar: [
+        {
+            source: ['caareviews.org/reviews/book'],
+        },
+    ],
     name: 'Book Reviews',
     maintainers: ['Fatpandac'],
     handler,

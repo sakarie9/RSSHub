@@ -1,5 +1,6 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+
 import { getItem } from './utils';
 
 export const route: Route = {
@@ -15,10 +16,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['crossbell.io/*'],
-        target: '/notes',
-    },
+    radar: [
+        {
+            source: ['crossbell.io/*'],
+            target: '/notes',
+        },
+    ],
     name: 'Notes of source',
     maintainers: ['DIYgod'],
     handler,

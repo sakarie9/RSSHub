@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import utils from './utils';
 import got from '@/utils/got';
+
+import utils from './utils';
 
 const rootURL = 'https://jiuye.swjtu.edu.cn/career';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jiuye.swjtu.edu.cn/career', 'jiuye.swjtu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['jiuye.swjtu.edu.cn/career', 'jiuye.swjtu.edu.cn/'],
+        },
+    ],
     name: '就业招聘信息',
     maintainers: ['qizidog'],
     handler,

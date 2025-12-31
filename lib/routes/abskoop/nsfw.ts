@@ -1,17 +1,22 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/nsfw',
-    radar: {
-        source: ['ahhhhfs.com/'],
-        target: '',
-    },
-    name: 'Unknown',
-    maintainers: [],
+    radar: [
+        {
+            source: ['ahhhhfs.com/'],
+            target: '',
+        },
+    ],
+    name: '存档列表 - NSFW',
+    maintainers: ['zhenhappy'],
     handler,
     url: 'ahhhhfs.com/',
+    features: {
+        nsfw: true,
+    },
 };
 
 async function handler(ctx) {

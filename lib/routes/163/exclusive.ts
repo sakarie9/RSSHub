@@ -1,14 +1,12 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
+import { load } from 'cheerio';
 
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+import timezone from '@/utils/timezone';
+
+import { renderExclusiveDescription } from './templates/exclusive';
 
 const ids = {
     '': {
@@ -90,30 +88,32 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['3g.163.com/touch/exclusive/sub/:id'],
-    },
+    radar: [
+        {
+            source: ['3g.163.com/touch/exclusive/sub/:id'],
+        },
+    ],
     name: '栏目',
     maintainers: ['nczitzk'],
     handler,
     description: `| 分类     | 编号 |
-  | -------- | ---- |
-  | 首页     |      |
-  | 轻松一刻 | qsyk |
-  | 槽值     | cz   |
-  | 人间     | rj   |
-  | 大国小民 | dgxm |
-  | 三三有梗 | ssyg |
-  | 数读     | sd   |
-  | 看客     | kk   |
-  | 下划线   | xhx  |
-  | 谈心社   | txs  |
-  | 哒哒     | dd   |
-  | 胖编怪聊 | pbgl |
-  | 曲一刀   | qyd  |
-  | 今日之声 | jrzs |
-  | 浪潮     | lc   |
-  | 沸点     | fd   |`,
+| -------- | ---- |
+| 首页     |      |
+| 轻松一刻 | qsyk |
+| 槽值     | cz   |
+| 人间     | rj   |
+| 大国小民 | dgxm |
+| 三三有梗 | ssyg |
+| 数读     | sd   |
+| 看客     | kk   |
+| 下划线   | xhx  |
+| 谈心社   | txs  |
+| 哒哒     | dd   |
+| 胖编怪聊 | pbgl |
+| 曲一刀   | qyd  |
+| 今日之声 | jrzs |
+| 浪潮     | lc   |
+| 沸点     | fd   |`,
 };
 
 async function handler(ctx) {
@@ -150,7 +150,7 @@ async function handler(ctx) {
 
                         const video = JSON.parse(detailResponse.data.match(/^videoList\((.*)\)$/)[1])?.mp4_url;
 
-                        item.description = art(path.join(__dirname, 'templates/exclusive.art'), {
+                        item.description = renderExclusiveDescription({
                             video,
                         });
                     } else {
@@ -165,7 +165,7 @@ async function handler(ctx) {
 
                         content('.m-photo').each(function () {
                             content(this).html(
-                                art(path.join(__dirname, 'templates/exclusive.art'), {
+                                renderExclusiveDescription({
                                     image: content(this).find('img').attr('data-src'),
                                 })
                             );

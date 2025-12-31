@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { renderHTML } from './utils';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['gocn.vip/'],
-    },
+    radar: [
+        {
+            source: ['gocn.vip/'],
+        },
+    ],
     name: '招聘',
     maintainers: ['AtlanCI', 'CcccFz'],
     handler,

@@ -1,12 +1,15 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['grubstreet.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['grubstreet.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['loganrockmore'],
     handler,

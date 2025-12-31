@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['admission.pku.edu.cn/zsxx/sszs/index.htm', 'admission.pku.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['admission.pku.edu.cn/zsxx/sszs/index.htm', 'admission.pku.edu.cn/'],
+        },
+    ],
     name: '研究生招生网',
     maintainers: ['pkuyjs'],
     handler,
@@ -35,18 +38,14 @@ async function handler() {
         title: `${$('.twostage_title_C').text()} - ${$('title').text()}`,
         link,
         description: '北京大学研究生院通知公告',
-        item:
-            list &&
-            list
-                .map((index, item) => {
-                    item = $(item);
-                    return {
-                        title: item.find('li a').text(),
-                        description: item.find('li a').text(),
-                        link: item.find('li a').attr('href'),
-                        pubDate: parseDate(item.find('.zsxxCont_list_time').text()),
-                    };
-                })
-                .get(),
+        item: list.toArray().map((item) => {
+            item = $(item);
+            return {
+                title: item.find('li a').text(),
+                description: item.find('li a').text(),
+                link: item.find('li a').attr('href'),
+                pubDate: parseDate(item.find('.zsxxCont_list_time').text()),
+            };
+        }),
     };
 }

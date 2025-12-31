@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import { host, acw_sc__v2, parseList, parseItems } from './utils';
+
+import { acw_sc__v2, host, parseItems, parseList } from './utils';
 
 export const route: Route = {
     path: '/channel/:name',
@@ -17,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['segmentfault.com/channel/:name'],
-    },
+    radar: [
+        {
+            source: ['segmentfault.com/channel/:name'],
+        },
+    ],
     name: '频道',
     maintainers: ['LogicJake', 'Fatpandac'],
     handler,

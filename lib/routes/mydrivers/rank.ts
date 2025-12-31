@@ -1,9 +1,9 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 
-import { rootUrl, getInfo, processItems } from './util';
+import type { Route } from '@/types';
+import got from '@/utils/got';
+
+import { getInfo, processItems, rootUrl } from './util';
 
 export const route: Route = {
     path: '/rank/:range?',
@@ -18,17 +18,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['m.mydrivers.com/newsclass.aspx'],
-        target: '/rank',
-    },
+    radar: [
+        {
+            source: ['m.mydrivers.com/newsclass.aspx'],
+            target: '/rank',
+        },
+    ],
     name: '排行',
     maintainers: ['nczitzk'],
     handler,
     url: 'm.mydrivers.com/newsclass.aspx',
     description: `| 24 小时最热 | 本周最热 | 本月最热 |
-  | ----------- | -------- | -------- |
-  | 0           | 1        | 2        |`,
+| ----------- | -------- | -------- |
+| 0           | 1        | 2        |`,
 };
 
 async function handler(ctx) {
@@ -59,10 +61,10 @@ async function handler(ctx) {
             };
         });
 
-    items = await processItems(items, cache.tryGet);
+    items = await processItems(items);
 
     return {
         item: items,
-        ...(await getInfo(currentUrl, cache.tryGet, Number.parseInt(range, 10))),
+        ...(await getInfo(currentUrl, Number.parseInt(range, 10))),
     };
 }

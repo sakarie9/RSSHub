@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getNoticeList } from './utils';
 
 const url = 'https://www.njxzc.edu.cn/89/list.htm';
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.njxzc.edu.cn/89/list.htm', 'www.njxzc.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['www.njxzc.edu.cn/89/list.htm', 'www.njxzc.edu.cn/'],
+        },
+    ],
     name: '官网通知公告',
     maintainers: ['real-jiakai'],
     handler,

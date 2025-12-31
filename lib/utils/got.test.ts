@@ -1,88 +1,153 @@
-import { describe, expect, it, afterEach, vi } from 'vitest';
-import nock from 'nock';
+import { http, HttpResponse } from 'msw';
+import { Cookie, CookieJar } from 'tough-cookie';
+import { describe, expect, it, vi } from 'vitest';
 
-afterEach(() => {
-    vi.resetModules();
-});
+import { config } from '@/config';
+import got from '@/utils/got';
 
 describe('got', () => {
-    it('headers', async () => {
-        const { default: got } = await import('@/utils/got');
-        const { config } = await import('@/config');
-        nock('http://rsshub.test')
-            .get('/test')
-            .reply(function () {
-                expect(this.req.headers['user-agent']).toBe(config.ua);
-                return [200, ''];
-            });
-
-        await got.get('http://rsshub.test/test');
+    it('no ua headers', async () => {
+        const { data } = await got('http://rsshub.test/headers');
+        expect(data['user-agent']).toBeUndefined();
     });
 
     it('retry', async () => {
-        const { default: got } = await import('@/utils/got');
-        const { config } = await import('@/config');
         const requestRun = vi.fn();
-        nock('http://rsshub.test')
-            .get('/testRerty')
-            .times(config.requestRetry + 1)
-            .reply(() => {
+        const { default: server } = await import('@/setup.test');
+        server.use(
+            http.get(`http://rsshub.test/retry-test`, () => {
                 requestRun();
-                return [503, '0'];
-            });
+                return HttpResponse.error();
+            })
+        );
 
         try {
-            await got.get('http://rsshub.test/testRerty');
+            await got.get('http://rsshub.test/retry-test');
         } catch (error: any) {
-            expect(error.name).toBe('HTTPError');
+            expect(error.name).toBe('FetchError');
         }
 
         // retries
         expect(requestRun).toHaveBeenCalledTimes(config.requestRetry + 1);
     });
 
-    it('axios', async () => {
-        const { default: got } = await import('@/utils/got');
-        nock('http://rsshub.test')
-            .post('/post')
-            .reply(() => [200, '{"code": 0}']);
-
-        const response1 = await got.post('http://rsshub.test/post', {
+    it('form-post', async () => {
+        const response = await got.post('http://rsshub.test/form-post', {
             form: {
-                test: 1,
+                test: 'rsshub',
             },
         });
-        expect(response1.statusCode).toBe(200);
-        // @ts-expect-error custom property
-        expect(response1.status).toBe(200);
-        expect(response1.body).toBe('{"code": 0}');
-        // @ts-expect-error custom property
-        expect(response1.data.code).toBe(0);
+        expect(response.body).toContain('"test":"rsshub"');
+        expect(response.data.test).toBe('rsshub');
+        expect(response.data.req.headers['content-type']).toBe('application/x-www-form-urlencoded');
     });
 
-    it('timeout', async () => {
-        process.env.REQUEST_TIMEOUT = '500';
+    it('json-post', async () => {
+        const response = await got.post('http://rsshub.test/json-post', {
+            json: {
+                test: 'rsshub',
+            },
+        });
+        expect(response.body).toBe('{"test":"rsshub"}');
+        expect(response.data.test).toBe('rsshub');
+    });
 
-        const { default: got } = await import('@/utils/got');
-        nock('http://rsshub.test')
-            .get('/timeout')
-            .delay(600)
-            .reply(() => [200, '{"code": 0}']);
+    it('buffer-get', async () => {
+        const response = await got.get('http://rsshub.test/headers', {
+            responseType: 'buffer',
+        });
+        expect(response.body instanceof Buffer).toBe(true);
+        expect(response.data instanceof Buffer).toBe(true);
+    });
 
-        const logger = (await import('@/utils/logger')).default;
-        // @ts-expect-error unused
-        const loggerSpy = vi.spyOn(logger, 'error').mockReturnValue({});
+    it('cookieJar', async () => {
+        const cookieJar = new CookieJar();
+        const cookie = Cookie.fromJSON({
+            key: 'cookie',
+            value: 'test',
+            domain: 'rsshub.test',
+            path: '/',
+        });
+        cookie && cookieJar.setCookie(cookie, 'http://rsshub.test');
+        const { data } = await got.get('http://rsshub.test/headers', {
+            cookieJar,
+        });
 
-        try {
-            await got.get('http://rsshub.test/timeout');
-            throw new Error('Timeout Invalid');
-        } catch (error: any) {
-            expect(error.name).toBe('RequestError');
-        }
-        expect(loggerSpy).toHaveBeenCalledWith(expect.stringContaining('http://rsshub.test/timeout'));
+        expect(data.cookie).toBe('cookie=test; Domain=rsshub.test; Path=/');
+    });
 
-        loggerSpy.mockRestore();
+    it('runs beforeRequest hooks', async () => {
+        const hook = vi.fn((options) => {
+            options.headers = {
+                ...options.headers,
+                'x-before-request': '1',
+            };
+        });
 
-        delete process.env.REQUEST_TIMEOUT;
+        const { data } = await got('http://rsshub.test/headers', {
+            hooks: {
+                beforeRequest: [hook],
+            },
+        });
+
+        expect(hook).toHaveBeenCalledTimes(1);
+        expect(data['x-before-request']).toBe('1');
+    });
+
+    it('appends search params', async () => {
+        const { default: server } = await import('@/setup.test');
+        server.use(
+            http.get('http://rsshub.test/query', ({ request }) => {
+                const url = new URL(request.url);
+                return HttpResponse.json({
+                    query: Object.fromEntries(url.searchParams.entries()),
+                });
+            })
+        );
+
+        const { data } = await got('http://rsshub.test/query', {
+            searchParams: {
+                foo: 'bar',
+                baz: 'qux',
+            },
+        });
+
+        expect(data.query).toEqual({
+            foo: 'bar',
+            baz: 'qux',
+        });
+    });
+
+    it('supports additional http verbs and extend', async () => {
+        const { default: server } = await import('@/setup.test');
+        server.use(
+            http.all('http://rsshub.test/method', ({ request }) =>
+                HttpResponse.json({
+                    method: request.method,
+                })
+            )
+        );
+
+        const putResponse = await got.put('http://rsshub.test/method');
+        expect(putResponse.data.method).toBe('PUT');
+
+        const patchResponse = await got.patch('http://rsshub.test/method');
+        expect(patchResponse.data.method).toBe('PATCH');
+
+        const deleteResponse = await got.delete('http://rsshub.test/method');
+        expect(deleteResponse.data.method).toBe('DELETE');
+
+        const headResponse = await got.head('http://rsshub.test/method', {
+            responseType: 'text',
+        });
+        expect(headResponse).toBeUndefined();
+
+        const extended = got.extend({
+            headers: {
+                'x-extended': '1',
+            },
+        });
+        const extendedResponse = await extended.get('http://rsshub.test/headers');
+        expect(extendedResponse.data['x-extended']).toBe('1');
     });
 });

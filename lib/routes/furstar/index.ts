@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import utils from './utils';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
+import utils from './utils';
 
 export const route: Route = {
     path: '/characters/:lang?',
@@ -17,10 +18,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['furstar.jp/:lang', 'furstar.jp/'],
-        target: '/characters/:lang',
-    },
+    radar: [
+        {
+            source: ['furstar.jp/:lang', 'furstar.jp/'],
+            target: '/characters/:lang',
+        },
+    ],
     name: '最新售卖角色列表',
     maintainers: ['NeverBehave'],
     handler,

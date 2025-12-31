@@ -1,17 +1,20 @@
-import cache from '@/utils/cache';
 import { load } from 'cheerio';
-import { puppeteerGet, renderDesc } from './utils';
-import { config } from '@/config';
-import { isValidHost } from '@/utils/valid-host';
-import puppeteer from '@/utils/puppeteer';
 
-export default async (ctx) => {
+import { config } from '@/config';
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import cache from '@/utils/cache';
+import puppeteer from '@/utils/puppeteer';
+import { isValidHost } from '@/utils/valid-host';
+
+import { puppeteerGet, renderDesc } from './utils';
+
+const handler = async (ctx) => {
     const pub = ctx.req.param('pub');
     const jrn = ctx.req.param('jrn');
     const host = `https://pubs.aip.org`;
     const jrnlUrl = `${host}/${pub}/${jrn}/issue`;
     if (!isValidHost(pub)) {
-        throw new Error('Invalid pub');
+        throw new InvalidParameterError('Invalid pub');
     }
 
     // use Puppeteer due to the obstacle by cloudflare challenge
@@ -49,7 +52,7 @@ export default async (ctx) => {
         false
     );
 
-    browser.close();
+    await browser.close();
 
     return {
         title: jrnlName,
@@ -58,3 +61,4 @@ export default async (ctx) => {
         allowEmpty: true,
     };
 };
+export default handler;

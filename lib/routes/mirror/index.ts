@@ -1,12 +1,15 @@
-import { Route } from '@/types';
+import MarkdownIt from 'markdown-it';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import MarkdownIt from 'markdown-it';
+import { isValidHost } from '@/utils/valid-host';
+
 const md = MarkdownIt({
     html: true,
     linkify: true,
 });
-import { isValidHost } from '@/utils/valid-host';
 
 export const route: Route = {
     path: '/:id',
@@ -29,7 +32,7 @@ export const route: Route = {
 async function handler(ctx) {
     const id = ctx.req.param('id');
     if (!id.endsWith('.eth') && !isValidHost(id)) {
-        throw new Error('Invalid id');
+        throw new InvalidParameterError('Invalid id');
     }
     const rootUrl = 'https://mirror.xyz';
     const currentUrl = id.endsWith('.eth') ? `${rootUrl}/${id}` : `https://${id}.mirror.xyz`;

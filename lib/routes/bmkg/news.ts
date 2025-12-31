@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/news',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bmkg.go.id/', 'bmkg.go.id/berita'],
-    },
+    radar: [
+        {
+            source: ['bmkg.go.id/', 'bmkg.go.id/berita'],
+        },
+    ],
     name: 'News',
     maintainers: ['Shinanory'],
     handler,

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/system-update',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['nintendo.co.jp/support/switch/system_update/index.html', 'nintendo.co.jp/'],
-    },
+    radar: [
+        {
+            source: ['nintendo.co.jp/support/switch/system_update/index.html', 'nintendo.co.jp/'],
+        },
+    ],
     name: 'Switch System Update（Japan）',
     maintainers: ['hoilc'],
     handler,
@@ -41,10 +44,8 @@ async function handler() {
             const matched_date = /(\d+)年(\d+)月(\d+)日/.exec(heading);
             const update_info = update.nextUntil('.c-heading-lv3');
             const update_infos = update_info
-                .map(function () {
-                    return $(this).html();
-                })
-                .get()
+                .toArray()
+                .map((element) => $(element).html())
                 .join('\n');
             const matched_version = /(\d\.)+\d/.exec(heading);
 

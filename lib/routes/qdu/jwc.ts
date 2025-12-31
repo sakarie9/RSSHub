@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const base = 'https://jwc.qdu.edu.cn/';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jwc.qdu.edu.cn/jwtz.htm', 'jwc.qdu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['jwc.qdu.edu.cn/jwtz.htm', 'jwc.qdu.edu.cn/'],
+        },
+    ],
     name: '教务处通知',
     maintainers: ['abc1763613206'],
     handler,

@@ -1,16 +1,19 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const rootURL = 'https://www.cncf.io';
 
 export const route: Route = {
     path: '/reports',
-    radar: {
-        source: ['cncf.io/reports'],
-    },
+    radar: [
+        {
+            source: ['cncf.io/reports'],
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,
@@ -23,11 +26,11 @@ async function handler() {
     const response = await got(url);
     const $ = load(response.data);
     const list = $('div.report-item')
-        .map((_index, item) => ({
+        .toArray()
+        .map((item) => ({
             title: $(item).find('a.report-item__link').attr('title'),
             link: $(item).find('a.report-item__link').attr('href'),
-        }))
-        .get();
+        }));
 
     const items = await Promise.all(
         list.map((item) =>

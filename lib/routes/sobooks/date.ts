@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -14,10 +15,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['sobooks.net/:category'],
-        target: '/:category',
-    },
+    radar: [
+        {
+            source: ['sobooks.net/:category'],
+            target: '/:category',
+        },
+    ],
     name: '归档',
     maintainers: ['nczitzk'],
     handler,

@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -6,10 +6,12 @@ const baseUrl = 'https://rarehistoricalphotos.com';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['rarehistoricalphotos.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['rarehistoricalphotos.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['TonyRL'],
     handler,

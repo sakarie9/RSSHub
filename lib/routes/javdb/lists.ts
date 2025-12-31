@@ -1,16 +1,22 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
     path: '/lists/:id/:filter?/:sort?',
-    radar: {
-        source: ['javdb.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['javdb.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['dddepg'],
     handler,
     url: 'javdb.com/',
+    features: {
+        nsfw: true,
+    },
 };
 
 async function handler(ctx) {

@@ -3,40 +3,44 @@
 .github
 .husky
 .idea
+.idx
 .vscode
-Dockerfile*
-LICENSE
-Procfile
 app-minimal
 coverage
+eslint-plugins
 node_modules
 test
-website
 
 # files
 .codecov.yml
 .dockerignore
 .editorconfig
-.env
+.env*
 .eslint*
 .gitignore
-.gitpod.yml
 .markdownlint.jsonc
 .prettier*
 .(yarn|npm|nvm)rc
 *.md
+*.nix
+Dockerfile*
+LICENSE
 app.json
+eslint.config.mjs
 docker-compose*
+flake.lock
 fly.toml
 jsconfig.json
 npm-debug.log
 process.json
 package-lock.json
+tsdown-lib.config.ts
+tsdown-vercel.config.ts
+vitest.config.ts
 vercel.json
 
 # git but keep the git commit hash
 .git/logs
-.git/objects
 .git/index
 .git/info
 .git/hooks

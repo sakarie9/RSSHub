@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bbcnewslabs.co.uk/'],
-    },
+    radar: [
+        {
+            source: ['bbcnewslabs.co.uk/'],
+        },
+    ],
     name: 'News',
     maintainers: ['elxy'],
     handler,
@@ -34,8 +37,9 @@ async function handler() {
 
     const $ = load(response.data);
 
-    const items = [...$('a[href^="/news/20"]')]
-        .map((_, item) => {
+    const items = $('a[href^="/news/20"]')
+        .toArray()
+        .map((item) => {
             item = $(item);
             return {
                 title: item.find('h3[class^="thumbnail-module--thumbnailTitle--"]').text(),
@@ -43,8 +47,7 @@ async function handler() {
                 pubDate: parseDate(item.find('span[class^="thumbnail-module--thumbnailType--"]').text()),
                 link: rootUrl + item.attr('href'),
             };
-        })
-        .get();
+        });
 
     return {
         title: 'News - BBC News Labs',

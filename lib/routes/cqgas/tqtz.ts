@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const url = 'http://www.cqgas.cn/portal/article/page?cateId=1082&pageNo=1';
 export const route: Route = {
     path: '/tqtz',
@@ -17,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cqgas.cn/'],
-    },
+    radar: [
+        {
+            source: ['cqgas.cn/'],
+        },
+    ],
     name: '停气检修通知',
     maintainers: ['Mai19930513'],
     handler,

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import { getRollNewsList, parseRollNewsList, parseArticle } from '../utils';
+
+import { getRollNewsList, parseArticle, parseRollNewsList } from '../utils';
 
 export const route: Route = {
     path: '/finance/china/:lid?',
@@ -15,17 +16,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['finance.sina.com.cn/china', 'finance.sina.com.cn/'],
-        target: '/finance/china',
-    },
+    radar: [
+        {
+            source: ['finance.sina.com.cn/china', 'finance.sina.com.cn/'],
+            target: '/finance/china',
+        },
+    ],
     name: '财经－国內',
     maintainers: ['yubinbai'],
     handler,
     url: 'finance.sina.com.cn/china',
     description: `| 国内滚动 | 宏观经济 | 金融新闻 | 地方经济 | 部委动态 | 今日财经 TOP10 |
-  | -------- | -------- | -------- | -------- | -------- | -------------- |
-  | 1686     | 1687     | 1690     | 1688     | 1689     | 3231           |`,
+| -------- | -------- | -------- | -------- | -------- | -------------- |
+| 1686     | 1687     | 1690     | 1688     | 1689     | 3231           |`,
 };
 
 async function handler(ctx) {

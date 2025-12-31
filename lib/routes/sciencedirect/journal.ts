@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 import { decodeCFEmail } from './cf-email';
 
 export const route: Route = {
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['sciencedirect.com/journal/:id', 'sciencedirect.com/'],
-    },
+    radar: [
+        {
+            source: ['sciencedirect.com/journal/:id', 'sciencedirect.com/'],
+        },
+    ],
     name: 'Journal',
     maintainers: ['nczitzk'],
     handler,

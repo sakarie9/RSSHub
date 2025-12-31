@@ -1,7 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import { isValidHost } from '@/utils/valid-host';
 
@@ -29,22 +31,24 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['huanqiu.com/'],
-    },
+    radar: [
+        {
+            source: ['huanqiu.com/'],
+        },
+    ],
     name: '分类',
     maintainers: ['yuxinliu-alex'],
     handler,
     url: 'huanqiu.com/',
     description: `| 国内新闻 | 国际新闻 | 军事 | 台海   | 评论    |
-  | -------- | -------- | ---- | ------ | ------- |
-  | china    | world    | mil  | taiwai | opinion |`,
+| -------- | -------- | ---- | ------ | ------- |
+| china    | world    | mil  | taiwai | opinion |`,
 };
 
 async function handler(ctx) {
     const category = ctx.req.param('category') ?? 'china';
     if (!isValidHost(category)) {
-        throw new Error('Invalid category');
+        throw new InvalidParameterError('Invalid category');
     }
 
     const host = `https://${category}.huanqiu.com`;
@@ -52,18 +56,19 @@ async function handler(ctx) {
     const resp = await got({
         method: 'get',
         url: `${host}/api/channel_pc`,
-    }).json();
-    const name = getKeysRecursive(resp.children, 'children', 'domain_name', [])[0];
+    });
 
-    const nodes = getKeysRecursive(resp.children, 'children', 'node', [])
+    const name = getKeysRecursive(resp.data.children, 'children', 'domain_name', [])[0];
+
+    const nodes = getKeysRecursive(resp.data.children, 'children', 'node', [])
         .map((x) => `"${x}"`)
         .join(',');
     const req = await got({
         method: 'get',
         url: `${host}/api/list?node=${nodes}&offset=0&limit=${ctx.req.query('limit') ?? 20}`,
-    }).json();
+    });
 
-    let items = req.list
+    let items = req.data.list
         .filter((item) => item.aid)
         .map((item) => ({
             link: `${host}/article/${item.aid}`,

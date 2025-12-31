@@ -1,12 +1,14 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
-import { config } from '@/config';
 import MarkdownIt from 'markdown-it';
+
+import { config } from '@/config';
+import type { Route } from '@/types';
+import ofetch from '@/utils/ofetch';
+import { parseDate } from '@/utils/parse-date';
+
 const md = MarkdownIt({
     html: true,
     linkify: true,
 });
-import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/pull/:user/:repo/:state?/:labels?',
@@ -21,12 +23,14 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['github.com/:user/:repo/pulls', 'github.com/:user/:repo/pulls/:id', 'github.com/:user/:repo'],
-        target: '/pull/:user/:repo',
-    },
+    radar: [
+        {
+            source: ['github.com/:user/:repo/pulls', 'github.com/:user/:repo/pulls/:id', 'github.com/:user/:repo'],
+            target: '/pull/:user/:repo',
+        },
+    ],
     name: 'Repo Pull Requests',
-    maintainers: [],
+    maintainers: ['hashman', 'TonyRL'],
     handler,
 };
 
@@ -43,17 +47,17 @@ async function handler(ctx) {
     if (config.github && config.github.access_token) {
         headers.Authorization = `token ${config.github.access_token}`;
     }
-    const response = await got(url, {
-        searchParams: {
+    const response = await ofetch(url, {
+        query: {
             state,
             labels,
             sort: 'created',
             direction: 'desc',
-            per_page: ctx.req.query('limit') ? (Number.parseInt(ctx.req.query('limit')) <= 100 ? Number.parseInt(ctx.req.query('limit')) : 100) : 100,
+            per_page: ctx.req.query('limit') ? Math.min(Number.parseInt(ctx.req.query('limit')), 100) : 100,
         },
         headers,
     });
-    const data = response.data.filter((item) => item.pull_request);
+    const data = response.filter((item) => item.pull_request);
 
     return {
         allowEmpty: true,

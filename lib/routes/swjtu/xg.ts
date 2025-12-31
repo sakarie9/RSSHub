@@ -1,7 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const rootURL = 'http://xg.swjtu.edu.cn';
@@ -62,19 +64,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xg.swjtu.edu.cn/web/Home/PushNewsList', 'xg.swjtu.edu.cn/web/Home/NewsList', 'xg.swjtu.edu.cn/web/Home/ColourfulCollegeNewsList', 'xg.swjtu.edu.cn/web/Publicity/List', 'xg.swjtu.edu.cn/'],
-        target: '/xg',
-    },
+    radar: [
+        {
+            source: ['xg.swjtu.edu.cn/web/Home/PushNewsList', 'xg.swjtu.edu.cn/web/Home/NewsList', 'xg.swjtu.edu.cn/web/Home/ColourfulCollegeNewsList', 'xg.swjtu.edu.cn/web/Publicity/List', 'xg.swjtu.edu.cn/'],
+            target: '/xg',
+        },
+    ],
     name: '扬华素质网',
     maintainers: ['mobyw'],
     handler,
     url: 'xg.swjtu.edu.cn/web/Home/PushNewsList',
     description: `栏目列表：
 
-  | 通知公告 | 扬华新闻 | 多彩学院 | 学工之家 |
-  | -------- | -------- | -------- | -------- |
-  | tzgg     | yhxw     | dcxy     | xgzj     |`,
+| 通知公告 | 扬华新闻 | 多彩学院 | 学工之家 |
+| -------- | -------- | -------- | -------- |
+| tzgg     | yhxw     | dcxy     | xgzj     |`,
 };
 
 async function handler(ctx) {
@@ -82,7 +86,7 @@ async function handler(ctx) {
     const pageURL = listURL[code];
 
     if (!pageURL) {
-        throw new Error('code not supported');
+        throw new InvalidParameterError('code not supported');
     }
 
     const resp = await got({

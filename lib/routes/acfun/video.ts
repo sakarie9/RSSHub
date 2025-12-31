@@ -1,15 +1,25 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/user/video/:uid',
-    radar: {
-        source: ['www.acfun.cn/u/:id'],
-        target: '/user/video/:id',
+    radar: [
+        {
+            source: ['www.acfun.cn/u/:id'],
+            target: '/user/video/:id',
+        },
+    ],
+    name: '用户投稿',
+    parameters: {
+        uid: '用户 UID',
     },
-    name: 'Unknown',
+    categories: ['anime'],
+    example: '/acfun/user/video/6102',
+    view: ViewType.Videos,
     maintainers: ['wdssmq'],
     handler,
 };
@@ -28,7 +38,7 @@ async function handler(ctx) {
     const $ = load(data);
     const title = $('title').text();
     const description = $('.signature .complete').text();
-    const list = $('#ac-space-video-list a').get();
+    const list = $('#ac-space-video-list a').toArray();
     const image = $('head style')
         .text()
         .match(/.user-photo{\n\s*background:url\((.*)\) 0% 0% \/ 100% no-repeat;/)[1];

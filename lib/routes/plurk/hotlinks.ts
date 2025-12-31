@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
+
 import { baseUrl, getPlurk } from './utils';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['plurk.com/hotlinks'],
-    },
+    radar: [
+        {
+            source: ['plurk.com/hotlinks'],
+        },
+    ],
     name: 'Hotlinks',
     maintainers: ['TonyRL'],
     handler,

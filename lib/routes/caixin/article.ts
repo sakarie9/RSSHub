@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { parseArticle } from './utils';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: true,
         supportScihub: false,
     },
-    radar: {
-        source: ['caixin.com/'],
-    },
+    radar: [
+        {
+            source: ['caixin.com/'],
+        },
+    ],
     name: '首页新闻',
     maintainers: ['EsuRt'],
     handler,
@@ -40,7 +43,7 @@ async function handler() {
         audio_image_url: item.audio_image_url,
     }));
 
-    const items = await Promise.all(list.map((item) => parseArticle(item, cache.tryGet)));
+    const items = await Promise.all(list.map((item) => cache.tryGet(item.link, () => parseArticle(item))));
 
     return {
         title: '财新网 - 首页',

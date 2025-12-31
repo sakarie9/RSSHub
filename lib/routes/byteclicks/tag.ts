@@ -1,6 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+
 import { parseItem } from './utils';
+
 const baseUrl = 'https://byteclicks.com';
 
 export const route: Route = {
@@ -16,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['byteclicks.com/tag/:tag'],
-    },
+    radar: [
+        {
+            source: ['byteclicks.com/tag/:tag'],
+        },
+    ],
     name: '标签',
     maintainers: ['TonyRL'],
     handler,

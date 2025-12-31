@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/rczp',
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bupt.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['bupt.edu.cn/'],
+        },
+    ],
     name: '人才招聘',
     maintainers: ['nczitzk'],
     handler,
@@ -39,15 +42,15 @@ async function handler() {
     const $ = load(response.data);
 
     const list = $('.date-block')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             return {
                 title: item.next().text(),
                 link: `${rootUrl}/${item.next().attr('href')}`,
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,14 +15,16 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['mygopen.com/search/label/:label', 'mygopen.com/'],
-    },
+    radar: [
+        {
+            source: ['mygopen.com/search/label/:label', 'mygopen.com/'],
+        },
+    ],
     name: '分類',
     maintainers: ['nczitzk'],
     handler,
     description: `| 謠言 | 詐騙 | 真實資訊 | 教學 |
-  | ---- | ---- | -------- | ---- |`,
+| ---- | ---- | -------- | ---- |`,
 };
 
 async function handler(ctx) {

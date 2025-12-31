@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
+
 import { rootUrl } from './utils';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['0daily.com/search/:keyword'],
-    },
+    radar: [
+        {
+            source: ['0daily.com/search/:keyword'],
+        },
+    ],
     name: '搜索快讯',
     maintainers: ['snowraincloud'],
     handler,

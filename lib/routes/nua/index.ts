@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import util from './utils';
 
 export const route: Route = {
@@ -14,16 +15,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['index.nua.edu.cn/:type/list.htm'],
-    },
+    radar: [
+        {
+            source: ['index.nua.edu.cn/:type/list.htm'],
+        },
+    ],
     name: 'Official Information',
     maintainers: ['evnydd0sf'],
     handler,
     description: `| News Type | Parameters |
-  | --------- | ---------- |
-  | 公告      | 346        |
-  | 南艺要闻  | 332        |`,
+| --------- | ---------- |
+| 公告      | 346        |
+| 南艺要闻  | 332        |`,
 };
 
 async function handler(ctx) {

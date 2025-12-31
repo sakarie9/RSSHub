@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['greasyfork.org/:language', 'greasyfork.org/:language/scripts/by-site/:domain?'],
-    },
+    radar: [
+        {
+            source: ['greasyfork.org/:language', 'greasyfork.org/:language/scripts/by-site/:domain?'],
+        },
+    ],
     name: 'Script Update',
     maintainers: ['imlonghao', 'miles170'],
     handler,

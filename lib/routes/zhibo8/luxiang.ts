@@ -1,15 +1,18 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/luxiang/:category?',
-    radar: {
-        source: ['zhibo8.cc/:category/luxiang.htm'],
-        target: '/luxiang/:category',
-    },
+    radar: [
+        {
+            source: ['zhibo8.cc/:category/luxiang.htm'],
+            target: '/luxiang/:category',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['TonyRL'],
     handler,
@@ -36,7 +39,7 @@ async function handler(ctx) {
                     return {
                         title: `${item.previousSibling.data.replace(' | ', '')} ${$(item).text()}`,
                         link: `${rootUrl}${href}`,
-                        pubDate: timezone(parseDate(`${href.replace(`/${category}/`, '').substring(0, 4)} ${dateStr}`, 'YYYY M月D日'), +8),
+                        pubDate: timezone(parseDate(`${href.replace(`/${category}/`, '').slice(0, 4)} ${dateStr}`, 'YYYY M月D日'), +8),
                     };
                 });
         });

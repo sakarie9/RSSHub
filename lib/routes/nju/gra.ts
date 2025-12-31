@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['grawww.nju.edu.cn/main.htm', 'grawww.nju.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['grawww.nju.edu.cn/main.htm', 'grawww.nju.edu.cn/'],
+        },
+    ],
     name: '研究生院',
     maintainers: ['ret-1'],
     handler,
@@ -41,7 +44,8 @@ async function handler() {
         title: '研究生院-动态通知',
         link: 'https://grawww.nju.edu.cn/905/list.htm',
         item: list
-            .map((index, item) => {
+            .toArray()
+            .map((item) => {
                 item = $(item);
 
                 const year = item.find('.news_days').first().text();
@@ -56,7 +60,6 @@ async function handler() {
                     pubDate: timezone(parseDate(year + day, 'YYYYMM-DD'), +8),
                 };
             })
-            .get()
             .filter(Boolean),
     };
 }

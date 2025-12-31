@@ -1,7 +1,9 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 export const route: Route = {
     path: '/zcc',
     categories: ['university'],
@@ -15,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['zcc.nju.edu.cn/tzgg/gyfytdglk/index.html', 'zcc.nju.edu.cn/tzgg/index.html', 'zcc.nju.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['zcc.nju.edu.cn/tzgg/gyfytdglk/index.html', 'zcc.nju.edu.cn/tzgg/index.html', 'zcc.nju.edu.cn/'],
+        },
+    ],
     name: '资产管理处',
     maintainers: ['ret-1'],
     handler,

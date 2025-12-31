@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
@@ -23,17 +23,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['job.ustc.edu.cn/'],
-        target: '/job',
-    },
+    radar: [
+        {
+            source: ['job.ustc.edu.cn/'],
+            target: '/job',
+        },
+    ],
     name: '就业信息网',
     maintainers: ['nczitzk'],
     handler,
     url: 'job.ustc.edu.cn/',
     description: `| 专场招聘会  | 校园双选会   | 空中宣讲  | 招聘公告 |
-  | ----------- | ------------ | --------- | -------- |
-  | RecruitList | Doublechoice | Broadcast | joblist2 |`,
+| ----------- | ------------ | --------- | -------- |
+| RecruitList | Doublechoice | Broadcast | joblist2 |`,
 };
 
 async function handler(ctx) {

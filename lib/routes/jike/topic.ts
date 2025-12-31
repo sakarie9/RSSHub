@@ -1,17 +1,27 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
-import { topicDataHanding, constructTopicEntry } from './utils';
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
+
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
+
+import { constructTopicEntry, topicDataHanding } from './utils';
 
 const urlRegex = /(https?:\/\/[^\s"'<>]+)/g;
 
 export const route: Route = {
     path: '/topic/:id/:showUid?',
     categories: ['social-media'],
+    view: ViewType.SocialMedia,
     example: '/jike/topic/556688fae4b00c57d9dd46ee',
-    parameters: { id: '圈子 id, 可在即刻 web 端圈子页或 APP 分享出来的圈子页 URL 中找到', showUid: '是否在内容中显示用户信息，设置为 1 则开启' },
+    parameters: {
+        id: '圈子 id, 可在即刻 web 端圈子页或 APP 分享出来的圈子页 URL 中找到',
+        showUid: {
+            description: '是否在内容中显示用户信息，设置为 1 则开启',
+            options: [{ value: '1', label: '显示' }],
+        },
+    },
     features: {
         requireConfig: false,
         requirePuppeteer: false,
@@ -20,10 +30,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['web.okjike.com/topic/:id'],
-        target: '/topic/:id',
-    },
+    radar: [
+        {
+            source: ['web.okjike.com/topic/:id'],
+            target: '/topic/:id',
+        },
+    ],
     name: '圈子',
     maintainers: ['DIYgod', 'prnake'],
     handler,
@@ -36,7 +48,7 @@ async function handler(ctx) {
     const data = await constructTopicEntry(ctx, topicUrl);
 
     if (data) {
-        const result = ctx.get('data');
+        const result = data.result;
         result.item = topicDataHanding(data, ctx);
         if (id === '553870e8e4b0cafb0a1bef68' || id === '55963702e4b0d84d2c30ce6f') {
             result.item = await Promise.all(

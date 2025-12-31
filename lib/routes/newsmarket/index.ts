@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,19 +18,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['newsmarket.com.tw/blog/category/:category', 'newsmarket.com.tw/'],
-    },
+    radar: [
+        {
+            source: ['newsmarket.com.tw/blog/category/:category', 'newsmarket.com.tw/'],
+        },
+    ],
     name: '分類',
     maintainers: ['nczitzk'],
     handler,
     description: `| 時事。政策  | 食安        | 新知      | 愛地方       | 種好田       | 好吃。好玩    |
-  | ----------- | ----------- | --------- | ------------ | ------------ | ------------- |
-  | news-policy | food-safety | knowledge | country-life | good-farming | good-food-fun |
+| ----------- | ----------- | --------- | ------------ | ------------ | ------------- |
+| news-policy | food-safety | knowledge | country-life | good-farming | good-food-fun |
 
-  | 食農教育       | 人物               | 漁業。畜牧           | 綠生活。國際        | 評論    |
-  | -------------- | ------------------ | -------------------- | ------------------- | ------- |
-  | food-education | people-and-history | raising-and-breeding | living-green-travel | opinion |`,
+| 食農教育       | 人物               | 漁業。畜牧           | 綠生活。國際        | 評論    |
+| -------------- | ------------------ | -------------------- | ------------------- | ------- |
+| food-education | people-and-history | raising-and-breeding | living-green-travel | opinion |`,
 };
 
 async function handler(ctx) {
@@ -47,7 +50,8 @@ async function handler(ctx) {
 
     const list = $('.title a')
         .slice(0, ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit')) : 20)
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             return {
@@ -55,8 +59,7 @@ async function handler(ctx) {
                 link: item.attr('href'),
                 pubDate: parseDate(),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

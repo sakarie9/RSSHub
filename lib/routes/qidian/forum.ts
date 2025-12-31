@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseRelativeDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['book.qidian.com/info/:id'],
-    },
+    radar: [
+        {
+            source: ['book.qidian.com/info/:id'],
+        },
+    ],
     name: '讨论区',
     maintainers: ['fuzy112'],
     handler,

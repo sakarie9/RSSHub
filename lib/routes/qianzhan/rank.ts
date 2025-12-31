@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,17 +19,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['qianzhan.com/analyst', 'qianzhan.com/'],
-        target: '/analyst/rank',
-    },
+    radar: [
+        {
+            source: ['qianzhan.com/analyst', 'qianzhan.com/'],
+            target: '/analyst/rank',
+        },
+    ],
     name: '排行榜',
     maintainers: ['moke8'],
     handler,
     url: 'qianzhan.com/analyst',
     description: `| 周排行 | 月排行 |
-  | ------ | ------ |
-  | week   | month  |`,
+| ------ | ------ |
+| week   | month  |`,
 };
 
 async function handler(ctx) {

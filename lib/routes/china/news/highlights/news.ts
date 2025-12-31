@@ -1,5 +1,6 @@
-import { Route } from '@/types';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -23,17 +24,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['news.china.com/:category'],
-    },
+    radar: [
+        {
+            source: ['news.china.com/:category'],
+        },
+    ],
     name: 'News and current affairs 时事新闻',
     maintainers: ['jiaaoMario'],
     handler,
     description: `Category of news
 
-  | China News | International News | Social News | Breaking News |
-  | ---------- | ------------------ | ----------- | ------------- |
-  | domestic   | international      | social      | news100       |`,
+| China News | International News | Social News | Breaking News |
+| ---------- | ------------------ | ----------- | ------------- |
+| domestic   | international      | social      | news100       |`,
 };
 
 async function handler(ctx) {
@@ -48,20 +51,16 @@ async function handler(ctx) {
     return {
         title: `中华网-${categoryTitle}新闻`,
         link: websiteUrl,
-        item:
-            news &&
-            news
-                .map((_, item) => {
-                    item = $(item);
-                    return {
-                        title: item.find('.item_title a').text(),
-                        author: item.find('.item_source').text(),
-                        category: `${categoryTitle}新闻`,
-                        pubDate: parseDate(item.find('.item_time').text()),
-                        description: item.find('.item_title a').text(),
-                        link: item.find('li a').attr('href'),
-                    };
-                })
-                .get(),
+        item: news.toArray().map((item) => {
+            item = $(item);
+            return {
+                title: item.find('.item_title a').text(),
+                author: item.find('.item_source').text(),
+                category: `${categoryTitle}新闻`,
+                pubDate: parseDate(item.find('.item_time').text()),
+                description: item.find('.item_title a').text(),
+                link: item.find('li a').attr('href'),
+            };
+        }),
     };
 }

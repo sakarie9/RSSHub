@@ -1,6 +1,8 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -21,10 +23,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['pianyuan.org/'],
-        target: '/index',
-    },
+    radar: [
+        {
+            source: ['pianyuan.org/'],
+            target: '/index',
+        },
+    ],
     name: '最新资源',
     maintainers: ['greatcodeeer', 'jerry1119'],
     handler,
@@ -53,7 +57,7 @@ async function handler(ctx) {
     const response = await utils.request(link, cache);
     const $ = load(response.data);
     const detailLinks = $('#main-container > div > div.col-md-10 > table > tbody > tr')
-        .get()
+        .toArray()
         .map((tr) => $(tr).find('td.dt.prel.nobr > a').attr('href'));
     detailLinks.shift();
     const items = await utils.ProcessFeed(detailLinks, cache);

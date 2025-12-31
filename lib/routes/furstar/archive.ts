@@ -1,7 +1,8 @@
-import { Route } from '@/types';
-import utils from './utils';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
+import utils from './utils';
 
 export const route: Route = {
     path: '/archive/:lang?',
@@ -16,10 +17,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['furstar.jp/:lang/archive.php', 'furstar.jp/archive.php'],
-        target: '/archive/:lang',
-    },
+    radar: [
+        {
+            source: ['furstar.jp/:lang/archive.php', 'furstar.jp/archive.php'],
+            target: '/archive/:lang',
+        },
+    ],
     name: '已经出售的角色列表',
     maintainers: ['NeverBehave'],
     handler,

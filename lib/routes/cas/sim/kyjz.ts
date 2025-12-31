@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const host = 'http://www.sim.cas.cn/';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.sim.cas.cn/xwzx2016/kyjz', 'www.sim.cas.cn/'],
-    },
+    radar: [
+        {
+            source: ['www.sim.cas.cn/xwzx2016/kyjz', 'www.sim.cas.cn/'],
+        },
+    ],
     name: '上海微系统与信息技术研究所 科技进展',
     maintainers: ['HenryQW'],
     handler,

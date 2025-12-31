@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import { config } from '@/config';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { config } from '@/config';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/discussions/:modelId',
@@ -21,14 +22,17 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['civitai.com/models/:modelId'],
-    },
+    radar: [
+        {
+            source: ['civitai.com/models/:modelId'],
+        },
+    ],
     name: 'Model discussions',
     maintainers: ['DIYgod'],
     handler,
-    description: `:::warning
+    description: `::: warning
 Need to configure \`CIVITAI_COOKIE\` to obtain image information of NSFW models.
 :::`,
 };

@@ -1,7 +1,9 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 const pageUrl = 'https://www.asus.com/campaign/GPU-Tweak-III/tw/index.php';
 
 export const route: Route = {
@@ -17,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['asus.com/campaign/GPU-Tweak-III/*', 'asus.com/'],
-    },
+    radar: [
+        {
+            source: ['asus.com/campaign/GPU-Tweak-III/*', 'asus.com/'],
+        },
+    ],
     name: 'GPU Tweak',
     maintainers: ['TonyRL'],
     handler,

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,16 +18,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['dky.sicau.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['dky.sicau.edu.cn/'],
+        },
+    ],
     name: '招生就业',
     maintainers: ['nczitzk'],
     handler,
     url: 'dky.sicau.edu.cn/',
     description: `| 本科生招生 | 研究生招生 | 毕业生选录指南 |
-  | ---------- | ---------- | -------------- |
-  | bkszs      | yjszs      | bysxlzn        |`,
+| ---------- | ---------- | -------------- |
+| bkszs      | yjszs      | bysxlzn        |`,
 };
 
 async function handler(ctx) {
@@ -42,7 +45,8 @@ async function handler(ctx) {
     const $ = load(response.data);
 
     const list = $('a.tit')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             return {
@@ -50,8 +54,7 @@ async function handler(ctx) {
                 pubDate: parseDate(item.prev().text()),
                 link: `${rootUrl}${item.attr('href').replace(/\.\./, '/')}`,
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got'; // 自订的 got
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xiaote.com/'],
-    },
+    radar: [
+        {
+            source: ['xiaote.com/'],
+        },
+    ],
     name: '首页帖子',
     maintainers: ['wxsimon'],
     handler,

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { parseList, parseItem } from './utils';
+
+import { parseItem, parseList } from './utils';
 
 export const route: Route = {
     path: '/tag/:tag',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.4gamers.com.tw/news/tag/:tag'],
-    },
+    radar: [
+        {
+            source: ['www.4gamers.com.tw/news/tag/:tag'],
+        },
+    ],
     name: '标签',
     maintainers: ['hoilc'],
     handler,

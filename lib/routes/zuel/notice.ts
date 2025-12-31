@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['wap.zuel.edu.cn/', 'wap.zuel.edu.cn/notice/list.htm'],
-    },
+    radar: [
+        {
+            source: ['wap.zuel.edu.cn/', 'wap.zuel.edu.cn/notice/list.htm'],
+        },
+    ],
     name: '通知公告',
     maintainers: ['nczitzk'],
     handler,

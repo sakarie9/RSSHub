@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/tag/:tag?',
@@ -16,10 +17,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bandcamp.com/tag/:tag'],
-        target: '/tag/:tag',
-    },
+    radar: [
+        {
+            source: ['bandcamp.com/tag/:tag'],
+            target: '/tag/:tag',
+        },
+    ],
     name: 'Tag',
     maintainers: ['nczitzk'],
     handler,

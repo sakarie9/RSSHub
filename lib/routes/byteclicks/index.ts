@@ -1,14 +1,18 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+
 import { parseItem } from './utils';
+
 const baseUrl = 'https://byteclicks.com';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['byteclicks.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['byteclicks.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['TonyRL'],
     handler,

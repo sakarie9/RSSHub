@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getTeslaPrice } from './get-price';
 
 export const route: Route = {
@@ -14,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['tesla.cn/model3/design', 'tesla.cn/'],
-    },
+    radar: [
+        {
+            source: ['tesla.cn/model3/design', 'tesla.cn/'],
+        },
+    ],
     name: '价格',
     maintainers: ['xiaokyo'],
     handler,

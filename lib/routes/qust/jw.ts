@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 const baseUrl = 'https://jw.qust.edu.cn/';
 
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jw.qust.edu.cn/jwtz.htm', 'jw.qust.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['jw.qust.edu.cn/jwtz.htm', 'jw.qust.edu.cn/'],
+        },
+    ],
     name: '教务通知',
     maintainers: ['Silent-wqh'],
     handler,
@@ -33,7 +36,8 @@ async function handler() {
     });
     const $ = load(response.data);
     const items = $('.winstyle60982 tr a.c60982')
-        .map((_, element) => {
+        .toArray()
+        .map((element) => {
             const linkElement = $(element);
             const itemTitle = linkElement.text().trim();
             const path = linkElement.attr('href');
@@ -42,8 +46,7 @@ async function handler() {
                 title: itemTitle,
                 link: itemUrl,
             };
-        })
-        .get();
+        });
 
     return {
         title: '青岛科技大学 - 教务通知',

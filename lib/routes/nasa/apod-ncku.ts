@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['apod.nasa.govundefined'],
-    },
+    radar: [
+        {
+            source: ['apod.nasa.govundefined'],
+        },
+    ],
     name: 'Cheng Kung University Mirror',
     maintainers: ['nczitzk', 'williamgateszhao'],
     handler,
@@ -38,11 +41,11 @@ async function handler(ctx) {
 
     const list = $('body > b > a')
         .slice(0, limit)
-        .map((_, el) => ({
+        .toArray()
+        .map((el) => ({
             title: $(el).text(),
             link: `http://sprite.phys.ncku.edu.tw/astrolab/mirrors/apod/${$(el).attr('href')}`,
-        }))
-        .get();
+        }));
 
     const items = await Promise.all(
         list.map((item) =>

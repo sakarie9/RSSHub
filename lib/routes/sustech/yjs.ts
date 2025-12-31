@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['gs.sustech.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['gs.sustech.edu.cn/'],
+        },
+    ],
     name: '研究生网通知公告',
     maintainers: ['shengmaosu'],
     handler,

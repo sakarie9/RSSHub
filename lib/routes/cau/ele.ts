@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ciee.cau.edu.cn/col/col26712/index.html', 'ciee.cau.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['ciee.cau.edu.cn/col/col26712/index.html', 'ciee.cau.edu.cn/'],
+        },
+    ],
     name: '研招网通知公告',
     maintainers: ['shengmaosu'],
     handler,

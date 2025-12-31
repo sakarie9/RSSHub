@@ -1,9 +1,12 @@
-import { Route } from '@/types';
-import parser from '@/utils/rss-parser';
-import { parseDate } from '@/utils/parse-date';
+import 'dayjs/locale/zh-cn.js';
+
 import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/zh-cn';
+import localizedFormat from 'dayjs/plugin/localizedFormat.js';
+
+import type { Route } from '@/types';
+import { parseDate } from '@/utils/parse-date';
+import parser from '@/utils/rss-parser';
+
 dayjs.extend(localizedFormat);
 
 export const route: Route = {
@@ -19,10 +22,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cn.bing.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['cn.bing.com/'],
+            target: '',
+        },
+    ],
     name: '搜索',
     maintainers: ['CaoMeiYouRen'],
     handler,

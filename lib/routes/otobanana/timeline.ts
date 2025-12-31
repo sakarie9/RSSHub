@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
+
 import { apiBase, baseUrl, getUserInfo, renderPost } from './utils';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: true,
         supportScihub: false,
     },
-    radar: {
-        source: ['otobanana.com/user/:id'],
-    },
+    radar: [
+        {
+            source: ['otobanana.com/user/:id'],
+        },
+    ],
     name: 'Timeline タイムライン',
     maintainers: ['TonyRL'],
     handler,
@@ -32,6 +35,11 @@ async function handler(ctx) {
 
     const posts = postData.results.map((item) => renderPost(item));
 
+    ctx.set('json', {
+        userInfo,
+        postData,
+    });
+
     return {
         title: `${userInfo.name} (@${userInfo.username}) - タイムライン | OTOBANANA`,
         description: userInfo.bio.replaceAll('\n', ' '),
@@ -44,9 +52,4 @@ async function handler(ctx) {
         itunes_author: userInfo.name,
         item: posts,
     };
-
-    ctx.set('json', {
-        userInfo,
-        postData,
-    });
 }

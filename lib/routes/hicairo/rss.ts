@@ -1,14 +1,18 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['hicairo.com/'],
-        target: '',
-    },
-    name: 'Unknown',
+    categories: ['blog'],
+    example: '/hicairo',
+    radar: [
+        {
+            source: ['hicairo.com/'],
+        },
+    ],
+    name: '最近发表',
     maintainers: ['cnkmmk'],
     handler,
     url: 'hicairo.com/',
@@ -21,7 +25,8 @@ async function handler() {
     const title_main = $('channel > title').text();
     const description_main = $('channel > description').text();
     const items = $('channel > item')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             const $item = $(item);
             const link = $item.find('link').text();
             const title = $item.find('title').text();
@@ -33,8 +38,7 @@ async function handler() {
                 title,
                 description,
             };
-        })
-        .get();
+        });
 
     return {
         title: title_main,

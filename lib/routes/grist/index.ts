@@ -1,13 +1,19 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getData, getList } from './utils';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['grist.org/articles/'],
-    },
-    name: 'Unknown',
+    radar: [
+        {
+            source: ['grist.org/articles/'],
+        },
+    ],
+    name: 'Latest Articles',
     maintainers: ['Rjnishant530'],
+    categories: ['new-media'],
+    example: '/grist',
+    parameters: {},
     handler,
     url: 'grist.org/articles/',
 };

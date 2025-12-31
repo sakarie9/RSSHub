@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getNoticeList } from './utils';
 
 const url = 'https://ai.gxmzu.edu.cn/index/tzgg.htm';
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ai.gxmzu.edu.cn/index/tzgg.htm', 'ai.gxmzu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['ai.gxmzu.edu.cn/index/tzgg.htm', 'ai.gxmzu.edu.cn/'],
+        },
+    ],
     name: '人工智能学院通知公告',
     maintainers: ['real-jiakai'],
     handler,
@@ -29,7 +32,7 @@ export const route: Route = {
 async function handler(ctx) {
     const out = await getNoticeList(ctx, url, host, 'a', '.timestyle55267', {
         title: '.titlestyle55269',
-        content: '#vsb_content',
+        content: '#vsb_newscontent',
         date: '.timestyle55269',
     });
 

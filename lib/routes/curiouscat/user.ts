@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 
 const fetchAPIByUser = async (user) => {
@@ -9,9 +9,11 @@ const fetchAPIByUser = async (user) => {
 
 export const route: Route = {
     path: '/user/:id',
-    radar: {
-        source: ['curiouscat.live/:id'],
-    },
+    radar: [
+        {
+            source: ['curiouscat.live/:id'],
+        },
+    ],
     name: 'Unknown',
     maintainers: ['lucasew'],
     handler,

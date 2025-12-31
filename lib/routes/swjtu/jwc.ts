@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const rootURL = 'http://jwc.swjtu.edu.cn';
@@ -57,9 +58,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jwc.swjtu.edu.cn/vatuu/WebAction', 'jwc.swjtu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['jwc.swjtu.edu.cn/vatuu/WebAction', 'jwc.swjtu.edu.cn/'],
+        },
+    ],
     name: '教务网',
     maintainers: ['mobyw'],
     handler,

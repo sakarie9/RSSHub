@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,16 +19,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['dky.sicau.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['dky.sicau.edu.cn/'],
+        },
+    ],
     name: '动物科技学院',
     maintainers: ['nczitzk'],
     handler,
     url: 'dky.sicau.edu.cn/',
     description: `| 通知公告 | 学院动态 | 教学管理 | 动科大讲堂 | 就业信息 |
-  | -------- | -------- | -------- | ---------- | -------- |
-  | tzgg     | xydt     | jxgl     | dkdjt      | zpxx     |`,
+| -------- | -------- | -------- | ---------- | -------- |
+| tzgg     | xydt     | jxgl     | dkdjt      | zpxx     |`,
 };
 
 async function handler(ctx) {
@@ -44,7 +47,8 @@ async function handler(ctx) {
 
     const list = $('a.tit')
         .slice(0, 10)
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             return {
@@ -52,8 +56,7 @@ async function handler(ctx) {
                 link: `${rootUrl}/${item.attr('href')}`,
                 pubDate: timezone(parseDate(item.prev().text(), 'YYYY-MM-DD'), +8),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

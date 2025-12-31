@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const rootUrl = 'https://webapi.diandong.com';
@@ -30,19 +31,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['diandong.com/news'],
-        target: '/news/:cate',
-    },
+    radar: [
+        {
+            source: ['diandong.com/news'],
+            target: '/news/:cate',
+        },
+    ],
     name: '资讯',
     maintainers: ['Fatpandac'],
     handler,
     url: 'diandong.com/news',
     description: `分类
 
-  | 推荐 | 新车 | 导购 | 试驾 | 用车 | 技术 | 政策 | 行业 |
-  | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-  | 0    | 29   | 61   | 30   | 75   | 22   | 24   | 23   |`,
+| 推荐 | 新车 | 导购 | 试驾 | 用车 | 技术 | 政策 | 行业 |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| 0    | 29   | 61   | 30   | 75   | 22   | 24   | 23   |`,
 };
 
 async function handler(ctx) {

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ai.ucas.ac.cn/index.php/zh-cn/tzgg', 'ai.ucas.ac.cn/'],
-    },
+    radar: [
+        {
+            source: ['ai.ucas.ac.cn/index.php/zh-cn/tzgg', 'ai.ucas.ac.cn/'],
+        },
+    ],
     name: '人工智能学院',
     maintainers: ['shengmaosu'],
     handler,

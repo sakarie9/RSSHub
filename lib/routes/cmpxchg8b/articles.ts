@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 const baseUrl = 'https://lock.cmpxchg8b.com/';
 const title = 'cmpxchg8b';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['lock.cmpxchg8b.com/articles'],
-    },
+    radar: [
+        {
+            source: ['lock.cmpxchg8b.com/articles'],
+        },
+    ],
     name: 'Articles',
     maintainers: ['yuguorui'],
     handler,

@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+import MarkdownIt from 'markdown-it';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
-import MarkdownIt from 'markdown-it';
+
 const md = MarkdownIt({
     linkify: true,
 });
@@ -22,9 +24,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xiaozhuanlan.com/:id'],
-    },
+    radar: [
+        {
+            source: ['xiaozhuanlan.com/:id'],
+        },
+    ],
     name: '专栏',
     maintainers: ['TonyRL'],
     handler,

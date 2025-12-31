@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { parseList, parseItem } from './utils';
+
+import { parseItem, parseList } from './utils';
 
 export const route: Route = {
     path: '/topic/:topic',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.4gamers.com.tw/news/option-cfg/:topic'],
-    },
+    radar: [
+        {
+            source: ['www.4gamers.com.tw/news/option-cfg/:topic'],
+        },
+    ],
     name: '主題',
     maintainers: ['bestpika'],
     handler,

@@ -1,7 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -25,24 +27,26 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['eeis.ustc.edu.cn/'],
-        target: '/eeis',
-    },
+    radar: [
+        {
+            source: ['eeis.ustc.edu.cn/'],
+            target: '/eeis',
+        },
+    ],
     name: '电子工程与信息科学系',
     maintainers: ['jasongzy'],
     handler,
     url: 'eeis.ustc.edu.cn/',
     description: `| 通知公告 | 新闻信息 |
-  | -------- | -------- |
-  | tzgg     | xwxx     |`,
+| -------- | -------- |
+| tzgg     | xwxx     |`,
 };
 
 async function handler(ctx) {
     const type = ctx.req.param('type') ?? 'tzgg';
     const info = map.get(type);
     if (!info) {
-        throw new Error('invalid type');
+        throw new InvalidParameterError('invalid type');
     }
     const id = info.id;
 

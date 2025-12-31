@@ -1,5 +1,6 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import buildData from '@/utils/common-config';
+
 const baseUrl = 'https://www.xunhupay.com';
 
 export const route: Route = {
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.xunhupay.com/blog'],
-    },
+    radar: [
+        {
+            source: ['www.xunhupay.com/blog'],
+        },
+    ],
     name: '文章',
     maintainers: ['Joey'],
     handler,

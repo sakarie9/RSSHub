@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['itsc.nju.edu.cn/tzgg/list.htm'],
-    },
+    radar: [
+        {
+            source: ['itsc.nju.edu.cn/tzgg/list.htm'],
+        },
+    ],
     name: 'ITSC 信息中心',
     maintainers: ['ret-1'],
     handler,

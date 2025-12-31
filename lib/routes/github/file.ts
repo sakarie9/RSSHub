@@ -1,16 +1,26 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
-import { config } from '@/config';
 import queryString from 'query-string';
+
+import { config } from '@/config';
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/file/:user/:repo/:branch/:filepath{.+}',
-    radar: {
-        source: ['github.com/:user/:repo/blob/:branch/*filepath'],
-        target: '/file/:user/:repo/:branch/:filepath',
+    example: '/github/file/DIYgod/RSSHub/master/README.md',
+    parameters: {
+        user: 'GitHub user or org name',
+        repo: 'repository name',
+        branch: 'branch name',
+        filepath: 'path of target file',
     },
-    name: 'Unknown',
-    maintainers: [],
+    radar: [
+        {
+            source: ['github.com/:user/:repo/blob/:branch/*filepath'],
+            target: '/file/:user/:repo/:branch/:filepath',
+        },
+    ],
+    name: 'File Commits',
+    maintainers: ['zengxs'],
     handler,
 };
 

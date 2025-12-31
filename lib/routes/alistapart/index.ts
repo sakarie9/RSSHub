@@ -1,16 +1,21 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getData, getList } from './utils';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['alistapart.com/articles/'],
-        target: '',
-    },
-    name: 'Unknown',
+    categories: ['programming'],
+    radar: [
+        {
+            source: ['alistapart.com/articles/'],
+            target: '/',
+        },
+    ],
+    name: 'Home Feed',
     maintainers: ['Rjnishant530'],
     handler,
     url: 'alistapart.com/articles/',
+    example: '/alistapart',
 };
 
 async function handler() {

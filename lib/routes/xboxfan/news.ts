@@ -1,8 +1,9 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
-import { parseRelativeDate } from '@/utils/parse-date';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import md5 from '@/utils/md5';
+import { parseRelativeDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/news',
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xboxfan.com/'],
-    },
+    radar: [
+        {
+            source: ['xboxfan.com/'],
+        },
+    ],
     name: '资讯',
     maintainers: ['XXY233'],
     handler,

@@ -1,14 +1,16 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['weekendhk.com/'],
-        target: '',
-    },
-    name: 'Unknown',
+    example: '/weekendhk',
+    radar: [
+        {
+            source: ['weekendhk.com/'],
+        },
+    ],
+    name: '最新文章',
     maintainers: ['TonyRL'],
     handler,
     url: 'weekendhk.com/',

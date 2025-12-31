@@ -1,15 +1,13 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
+import { load } from 'cheerio';
 
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
 
-import { rootUrl, getSearchParams } from './utils';
+import { renderDepthDescription } from './templates/depth';
+import { getSearchParams, rootUrl } from './utils';
 
 const categories = {
     1000: '头条',
@@ -46,8 +44,8 @@ export const route: Route = {
     maintainers: ['nczitzk'],
     handler,
     description: `| 头条 | 股市 | 港股 | 环球 | 公司 | 券商 | 基金 | 地产 | 金融 | 汽车 | 科创 | 创业版 | 品见 | 期货 | 投教 |
-  | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ------ | ---- | ---- | ---- |
-  | 1000 | 1003 | 1135 | 1007 | 1005 | 1118 | 1110 | 1006 | 1032 | 1119 | 1111 | 1127   | 1160 | 1124 | 1176 |`,
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ------ | ---- | ---- | ---- |
+| 1000 | 1003 | 1135 | 1007 | 1005 | 1118 | 1110 | 1006 | 1032 | 1119 | 1111 | 1127   | 1160 | 1124 | 1176 |`,
 };
 
 async function handler(ctx) {
@@ -57,7 +55,7 @@ async function handler(ctx) {
     const title = categories[category];
 
     if (!title) {
-        throw new Error('Bad category. See <a href="https://docs.rsshub.app/routes/finance#cai-lian-she-shen-du">docs</a>');
+        throw new InvalidParameterError('Bad category. See <a href="https://docs.rsshub.app/routes/finance#cai-lian-she-shen-du">docs</a>');
     }
 
     const apiUrl = `${rootUrl}/v3/depth/home/assembled/${category}`;
@@ -90,9 +88,7 @@ async function handler(ctx) {
                 const articleDetail = nextData.props.initialState.detail.articleDetail;
 
                 item.author = articleDetail.author?.name ?? item.author ?? '';
-                item.description = art(path.join(__dirname, 'templates/depth.art'), {
-                    articleDetail,
-                });
+                item.description = renderDepthDescription(articleDetail);
 
                 return item;
             })

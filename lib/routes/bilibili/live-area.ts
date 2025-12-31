@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 
 export const route: Route = {
@@ -17,9 +17,9 @@ export const route: Route = {
     name: '直播分区',
     maintainers: ['Qixingchen'],
     handler,
-    description: `:::warning
+    description: `::: warning
   由于接口未提供开播时间，如果直播间未更换标题与分区，将视为一次。如果直播间更换分区与标题，将视为另一项
-  :::`,
+:::`,
 };
 
 async function handler(ctx) {

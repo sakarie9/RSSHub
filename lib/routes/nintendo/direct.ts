@@ -1,12 +1,10 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderDirectDescription } from './templates/direct';
 
 export const route: Route = {
     path: '/direct',
@@ -21,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['nintendo.com/nintendo-direct/archive', 'nintendo.com/'],
-    },
+    radar: [
+        {
+            source: ['nintendo.com/nintendo-direct/archive', 'nintendo.com/'],
+        },
+    ],
     name: 'Nintendo Direct',
     maintainers: ['HFO4'],
     handler,
@@ -42,10 +42,7 @@ async function handler() {
         title: item.name,
         pubDate: parseDate(item.startDate),
         link: `https://www.nintendo.com/nintendo-direct/${item.slug}/`,
-        description: art(path.join(__dirname, 'templates/direct.art'), {
-            publicId: item.thumbnail.publicId,
-            content: item.description.json.content,
-        }),
+        description: renderDirectDescription(item.thumbnail.publicId, item.description.json.content),
     }));
 
     return {

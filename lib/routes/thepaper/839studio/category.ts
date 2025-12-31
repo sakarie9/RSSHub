@@ -1,13 +1,16 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/839studio/:id',
-    radar: {
-        source: ['thepaper.cn/'],
-    },
-    name: 'Unknown',
+    radar: [
+        {
+            source: ['thepaper.cn/'],
+        },
+    ],
+    name: '澎湃美数课作品集 - 分类',
     maintainers: ['umm233'],
     handler,
     url: 'thepaper.cn/',
@@ -36,17 +39,13 @@ async function handler(ctx) {
         title: `澎湃美数课作品集-${category}`,
         link,
         description: desc,
-        item:
-            list &&
-            list
-                .map((index, item) => {
-                    item = $(item);
-                    return {
-                        title: item.find('.archive_up a').first().text(),
-                        description: `描述：${item.find('.imgdown p').text()}`,
-                        link: item.find('.archive_up a').attr('href'),
-                    };
-                })
-                .get(),
+        item: list.toArray().map((item) => {
+            item = $(item);
+            return {
+                title: item.find('.archive_up a').first().text(),
+                description: `描述：${item.find('.imgdown p').text()}`,
+                link: item.find('.archive_up a').attr('href'),
+            };
+        }),
     };
 }

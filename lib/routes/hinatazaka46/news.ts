@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['hinatazaka46.com/s/official/news/list', 'hinatazaka46.com/'],
-    },
+    radar: [
+        {
+            source: ['hinatazaka46.com/s/official/news/list', 'hinatazaka46.com/'],
+        },
+    ],
     name: 'Hinatazaka46 News 日向坂 46 新闻',
     maintainers: ['crispgm', 'akashigakki'],
     handler,

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,14 +18,16 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['topys.cn/search/:keyword', 'topys.cn/'],
-    },
+    radar: [
+        {
+            source: ['topys.cn/search/:keyword', 'topys.cn/'],
+        },
+    ],
     name: '关键字',
     maintainers: ['nczitzk'],
     handler,
     description: `| 创意 | 设计 | 商业 | 艺术 | 文化 | 科技 |
-  | ---- | ---- | ---- | ---- | ---- | ---- |`,
+| ---- | ---- | ---- | ---- | ---- | ---- |`,
 };
 
 async function handler(ctx) {

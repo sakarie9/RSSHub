@@ -1,13 +1,15 @@
-import { Route } from '@/types';
+import { config } from '@/config';
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
-import { config } from '@/config';
 
 export const route: Route = {
     path: '/topic/:id',
     categories: ['finance'],
+    view: ViewType.Articles,
     example: '/jin10/topic/396',
     parameters: { id: 'N' },
     features: {
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xnews.jin10.com/topic/:id'],
-    },
+    radar: [
+        {
+            source: ['xnews.jin10.com/topic/:id'],
+        },
+    ],
     name: '主题文章',
     maintainers: ['miles170'],
     handler,

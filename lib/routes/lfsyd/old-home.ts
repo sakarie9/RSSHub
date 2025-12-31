@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { ProcessFeed } from './utils';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.iyingdi.com/'],
-    },
+    radar: [
+        {
+            source: ['www.iyingdi.com/'],
+        },
+    ],
     name: '首页（旧版）',
     maintainers: ['auto-bot-ty'],
     handler,

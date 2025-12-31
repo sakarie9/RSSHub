@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import * as cheerio from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import cherrio from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import puppeteer from '@/utils/puppeteer';
 
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bluestacks.com/hc/en-us/articles/360056960211-Release-Notes-BlueStacks-5', 'bluestacks.com/'],
-    },
+    radar: [
+        {
+            source: ['bluestacks.com/hc/en-us/articles/360056960211-Release-Notes-BlueStacks-5', 'bluestacks.com/'],
+        },
+    ],
     name: 'BlueStacks 5 Release Notes',
     maintainers: ['TonyRL'],
     handler,
@@ -41,7 +44,7 @@ async function handler() {
     const res = await page.evaluate(() => document.documentElement.innerHTML);
     await page.close();
 
-    const $ = cherrio.load(res);
+    const $ = cheerio.load(res);
 
     const items = $('div h3 a')
         .toArray()
@@ -65,7 +68,7 @@ async function handler() {
                     waitUntil: 'domcontentloaded',
                 });
                 const res = await page.evaluate(() => document.documentElement.innerHTML);
-                const $ = cherrio.load(res);
+                const $ = cheerio.load(res);
                 await page.close();
 
                 item.description = $('div.article__body').html();

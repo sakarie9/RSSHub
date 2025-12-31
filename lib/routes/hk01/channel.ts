@@ -1,13 +1,16 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { rootUrl, apiRootUrl, ProcessItems } from './utils';
+
+import { apiRootUrl, ProcessItems, rootUrl } from './utils';
 
 export const route: Route = {
     path: '/channel/:id?',
-    radar: {
-        source: ['hk01.com/channel/:id', 'hk01.com/'],
-    },
+    radar: [
+        {
+            source: ['hk01.com/channel/:id', 'hk01.com/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

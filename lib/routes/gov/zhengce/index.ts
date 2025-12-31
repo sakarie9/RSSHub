@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: ['/zhengce/zuixin', '/zhengce/:category{.+}?'],
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.gov.cn/zhengce/zuixin.htm', 'www.gov.cn/'],
-    },
+    radar: [
+        {
+            source: ['www.gov.cn/zhengce/zuixin.htm', 'www.gov.cn/'],
+        },
+    ],
     name: '最新政策',
     maintainers: ['SettingDust', 'nczitzk'],
     handler,
@@ -68,19 +71,16 @@ async function handler(ctx) {
                     const agencyEl = content('table.bd1')
                         .find('td')
                         .toArray()
-                        .filter((a) => content(a).text().startsWith('发文机关'))
-                        .pop();
+                        .findLast((a) => content(a).text().startsWith('发文机关'));
 
                     const sourceEl = content('span.font-zyygwj')
                         .toArray()
-                        .filter((a) => content(a).text().startsWith('来源'))
-                        .pop();
+                        .findLast((a) => content(a).text().startsWith('来源'));
 
                     const subjectEl = content('table.bd1')
                         .find('td')
                         .toArray()
-                        .filter((a) => content(a).text().startsWith('主题分类'))
-                        .pop();
+                        .findLast((a) => content(a).text().startsWith('主题分类'));
 
                     const agency = agencyEl ? processElementText(agencyEl) : undefined;
                     const source = sourceEl ? processElementText(sourceEl) : undefined;

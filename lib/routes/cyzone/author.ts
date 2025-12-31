@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import { rootUrl, apiRootUrl, processItems, getInfo } from './util';
+
+import { apiRootUrl, getInfo, processItems, rootUrl } from './util';
 
 export const route: Route = {
     path: '/author/:id',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cyzone.cn/author/:id', 'cyzone.cn/'],
-    },
+    radar: [
+        {
+            source: ['cyzone.cn/author/:id', 'cyzone.cn/'],
+        },
+    ],
     name: '作者',
     maintainers: ['nczitzk'],
     handler,

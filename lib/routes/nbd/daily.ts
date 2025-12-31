@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 export const route: Route = {
     path: '/daily',
     categories: ['finance'],
@@ -12,9 +13,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['nbd.com.cn/', 'nbd.com.cn/columns/332'],
-    },
+    radar: [
+        {
+            source: ['nbd.com.cn/', 'nbd.com.cn/columns/332'],
+        },
+    ],
     name: '重磅原创',
     maintainers: ['yuuow'],
     handler,
@@ -22,5 +25,5 @@ export const route: Route = {
 };
 
 function handler(ctx) {
-    ctx.redirect('/nbd/332');
+    ctx.set('redirect', '/nbd/332');
 }

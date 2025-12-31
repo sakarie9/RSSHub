@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,12 +17,14 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['luogu.com.cn/discuss/47327', 'luogu.com.cn/'],
-        target: '/daily',
-    },
+    radar: [
+        {
+            source: ['luogu.com.cn/discuss/47327', 'luogu.com.cn/'],
+            target: '/daily',
+        },
+    ],
     name: '日报',
-    maintainers: ['LogicJake ', 'prnake ', 'nczitzk'],
+    maintainers: ['LogicJake', 'prnake', 'nczitzk'],
     handler,
     url: 'luogu.com.cn/discuss/47327',
 };

@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 
@@ -81,9 +81,11 @@ async function getContent(item) {
 
 export const route: Route = {
     path: '/:category?',
-    radar: {
-        source: ['cbirc.gov.cn/:category', 'cbirc.gov.cn/'],
-    },
+    radar: [
+        {
+            source: ['cbirc.gov.cn/:category', 'cbirc.gov.cn/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: ['JkCheung'],
     handler,

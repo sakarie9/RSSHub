@@ -1,5 +1,6 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+
 import cache from './cache';
 
 export const route: Route = {
@@ -15,10 +16,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['space.bilibili.com/:uid'],
-        target: '/user/bangumi/:uid',
-    },
+    radar: [
+        {
+            source: ['space.bilibili.com/:uid'],
+            target: '/user/bangumi/:uid',
+        },
+    ],
     name: '用户追番列表',
     maintainers: ['wdssmq'],
     handler,

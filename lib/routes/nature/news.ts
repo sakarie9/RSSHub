@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { baseUrl, cookieJar, getArticle } from './utils';
 
 export const route: Route = {
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: true,
     },
-    radar: {
-        source: ['nature.com/latest-news', 'nature.com/news', 'nature.com/'],
-    },
+    radar: [
+        {
+            source: ['nature.com/latest-news', 'nature.com/news', 'nature.com/'],
+        },
+    ],
     name: 'Nature News',
     maintainers: ['y9c', 'TonyRL'],
     handler,

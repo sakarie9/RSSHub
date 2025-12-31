@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { getNoticeList } from './utils';
 
 const url = 'https://njglyy.com/ygb/jypx/jypx.aspx';
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['njglyy.com/ygb/jypx/jypx.aspx', 'njglyy.com/'],
-    },
+    radar: [
+        {
+            source: ['njglyy.com/ygb/jypx/jypx.aspx', 'njglyy.com/'],
+        },
+    ],
     name: '员工版教育培训',
     maintainers: ['real-jiakai'],
     handler,

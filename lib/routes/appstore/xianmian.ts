@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['app.so/xianmian'],
-    },
+    radar: [
+        {
+            source: ['app.so/xianmian'],
+        },
+    ],
     name: '每日精品限免 / 促销应用（鲜面连线 by AppSo）',
     maintainers: ['Andiedie'],
     handler,

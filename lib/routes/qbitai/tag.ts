@@ -1,7 +1,6 @@
-import { Route } from '@/types';
-import parser from '@/utils/rss-parser';
-
+import type { Route } from '@/types';
 import { parseDate } from '@/utils/parse-date';
+import parser from '@/utils/rss-parser';
 
 export const route: Route = {
     path: '/tag/:tag',
@@ -16,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['qbitai.com/tag/:tag'],
-    },
+    radar: [
+        {
+            source: ['qbitai.com/tag/:tag'],
+        },
+    ],
     name: '标签',
     maintainers: ['FuryMartin'],
     handler,

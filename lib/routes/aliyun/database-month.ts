@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/database_month',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['mysql.taobao.org/monthly', 'mysql.taobao.org/'],
-    },
+    radar: [
+        {
+            source: ['mysql.taobao.org/monthly', 'mysql.taobao.org/'],
+        },
+    ],
     name: '数据库内核月报',
     maintainers: ['junbaor'],
     handler,
@@ -31,7 +34,8 @@ async function handler() {
     const $ = load(response.data);
 
     const list = $("ul[class='posts'] > li")
-        .map((i, e) => {
+        .toArray()
+        .map((e) => {
             const element = $(e);
             const title = element.find('a').text().trim();
             const link = `http://mysql.taobao.org${element.find('a').attr('href').trim()}/`;
@@ -40,8 +44,7 @@ async function handler() {
                 description: '',
                 link,
             };
-        })
-        .get();
+        });
 
     const result = await Promise.all(
         list.map((item) => {
@@ -59,6 +62,6 @@ async function handler() {
     return {
         title: $('title').text(),
         link: url,
-        item: result.reverse(),
+        item: result.toReversed(),
     };
 }

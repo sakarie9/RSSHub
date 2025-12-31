@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import { getData, getList } from './utils';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
+
+import { getData, getList } from './utils';
 
 export const route: Route = {
     path: '/featured',
@@ -17,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['grist.org/'],
-    },
+    radar: [
+        {
+            source: ['grist.org/'],
+        },
+    ],
     name: 'Featured',
     maintainers: ['Rjnishant530'],
     handler,

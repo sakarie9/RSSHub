@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,16 +18,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ngocn2.org/'],
-    },
+    radar: [
+        {
+            source: ['ngocn2.org/'],
+        },
+    ],
     name: '首页',
     maintainers: ['nczitzk'],
     handler,
     url: 'ngocn2.org/',
     description: `| 所有文章 | 早报        | 热点     |
-  | -------- | ----------- | -------- |
-  | article  | daily-brief | trending |`,
+| -------- | ----------- | -------- |
+| article  | daily-brief | trending |`,
 };
 
 async function handler(ctx) {
@@ -43,7 +46,8 @@ async function handler(ctx) {
     const $ = load(response.data);
 
     const list = $('.articleroll__article a')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             return {
@@ -51,8 +55,7 @@ async function handler(ctx) {
                 link: `${rootUrl}${item.attr('href')}`,
                 pubDate: parseDate(item.find('.meta').text()),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

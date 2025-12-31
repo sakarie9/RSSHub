@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { host, acw_sc__v2, parseList, parseItems } from './utils';
+
+import { acw_sc__v2, host, parseItems, parseList } from './utils';
 
 export const route: Route = {
     path: '/blogs/:tag',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['segmentfault.com/t/:tag/blogs'],
-    },
+    radar: [
+        {
+            source: ['segmentfault.com/t/:tag/blogs'],
+        },
+    ],
     name: '博客',
     maintainers: ['shiluanzzz'],
     handler,

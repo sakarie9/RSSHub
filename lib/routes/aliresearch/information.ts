@@ -1,8 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/information/:type?',
@@ -17,16 +17,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['aliresearch.com/cn/information', 'aliresearch.com/'],
-        target: '/information',
-    },
+    radar: [
+        {
+            source: ['aliresearch.com/cn/information', 'aliresearch.com/'],
+            target: '/information',
+        },
+    ],
     name: '资讯',
     maintainers: ['nczitzk'],
     handler,
     url: 'aliresearch.com/cn/information',
     description: `| 新闻 | 观点 | 案例 |
-  | ---- | ---- | ---- |`,
+| ---- | ---- | ---- |`,
 };
 
 async function handler(ctx) {

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['hitwh.edu.cn/1024/list.htm', 'hitwh.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['hitwh.edu.cn/1024/list.htm', 'hitwh.edu.cn/'],
+        },
+    ],
     name: '今日工大 - 通知公告',
     maintainers: ['raptazure'],
     handler,
@@ -38,12 +41,12 @@ async function handler() {
     const $ = load(response.data);
     const type = (filename) => filename.split('.').pop();
     const links = $('.list_list_wrap #wp_news_w10002 ul > li')
-        .map((_, el) => ({
+        .toArray()
+        .map((el) => ({
             pubDate: timezone(parseDate($(el).find('.news-time2').text()), 8),
             link: new URL($(el).find('a').attr('href'), baseUrl).toString(),
             title: $(el).find('a').text(),
-        }))
-        .get();
+        }));
 
     return {
         title: '哈尔滨工业大学（威海）通知公告',

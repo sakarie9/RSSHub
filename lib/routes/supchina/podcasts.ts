@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['supchina.com/podcasts', 'supchina.com/'],
-    },
+    radar: [
+        {
+            source: ['supchina.com/podcasts', 'supchina.com/'],
+        },
+    ],
     name: 'Podcasts',
     maintainers: ['nczitzk'],
     handler,
@@ -45,7 +48,7 @@ async function handler(ctx) {
 
             return {
                 link: item.find('guid').text(),
-                author: item.find('itunes\\:author').text(),
+                author: item.find(String.raw`itunes\:author`).text(),
             };
         });
 
@@ -83,8 +86,10 @@ async function handler(ctx) {
     return {
         title: 'SupChina - Podcasts',
         link: `${rootUrl}/podcasts`,
-        itunes_author: $('channel itunes\\:author').first().text(),
-        image: $('itunes\\:image').attr('href'),
+        itunes_author: $(String.raw`channel itunes\:author`)
+            .first()
+            .text(),
+        image: $(String.raw`itunes\:image`).attr('href'),
         item: items,
     };
 }

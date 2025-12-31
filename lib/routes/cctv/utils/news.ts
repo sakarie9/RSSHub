@@ -1,13 +1,12 @@
+import path from 'node:path';
+
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import * as path from 'node:path';
+import { PRESETS } from '@/utils/header-generator';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
-import randUserAgent from '@/utils/rand-user-agent';
 
-const UA = randUserAgent({ browser: 'mobile safari', os: 'ios', device: 'mobile' });
-
-export default async (category) => {
+const getNews = async (category) => {
     const url = `https://news.cctv.com/2019/07/gaiban/cmsdatainterface/page/${category}_1.jsonp`;
 
     const response = await got({
@@ -15,8 +14,8 @@ export default async (category) => {
         url,
         headers: {
             Referer: `http://news.cctv.com/${category}`,
-            'User-Agent': UA,
         },
+        headerGeneratorOptions: PRESETS.MODERN_IOS,
     });
 
     const data = JSON.parse(response.data.slice(category.length + 1, -1));
@@ -58,9 +57,7 @@ export default async (category) => {
                     const { data } = await got({
                         method: 'get',
                         url: api,
-                        headers: {
-                            'User-Agent': UA,
-                        },
+                        headerGeneratorOptions: PRESETS.MODERN_IOS,
                     });
 
                     switch (type) {
@@ -70,14 +67,14 @@ export default async (category) => {
                             break;
 
                         case 'PHO':
-                            description = data.photo_album_list.reduce((description, { photo_url, photo_name, photo_brief }) => {
+                            description = '';
+                            for (const { photo_url, photo_name, photo_brief } of data.photo_album_list) {
                                 description += `
                                     <img src=${photo_url} /><br>
                                     <strong>${photo_name}</strong><br>
                                     ${photo_brief}<br>
                                 `;
-                                return description;
-                            }, '');
+                            }
                             author = data.source;
                             break;
 
@@ -106,3 +103,4 @@ export default async (category) => {
         item: resultItem,
     };
 };
+export default getNews;

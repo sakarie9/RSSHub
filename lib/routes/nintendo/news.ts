@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import util from './utils';
 import { parseDate } from '@/utils/parse-date';
+
+import util from './utils';
 
 export const route: Route = {
     path: '/news',
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['nintendo.com.hk/topics', 'nintendo.com.hk/'],
-    },
+    radar: [
+        {
+            source: ['nintendo.com.hk/topics', 'nintendo.com.hk/'],
+        },
+    ],
     name: 'News（Hong Kong only）',
     maintainers: ['HFO4'],
     handler,

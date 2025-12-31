@@ -1,16 +1,20 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const baseTitle = '南京信息工程大学图书馆通知';
 const baseUrl = 'https://lib.nuist.edu.cn';
 
 export const route: Route = {
     path: '/lib',
-    radar: {
-        source: ['lib.nuist.edu.cn/', 'lib.nuist.edu.cn/index/tzgg.htm'],
-    },
+    radar: [
+        {
+            source: ['lib.nuist.edu.cn/', 'lib.nuist.edu.cn/index/tzgg.htm'],
+        },
+    ],
     name: 'Unknown',
     maintainers: ['gylidian'],
     handler,

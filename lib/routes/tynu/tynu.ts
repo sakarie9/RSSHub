@@ -1,16 +1,20 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const baseUrl = 'http://www.tynu.edu.cn';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['tynu.edu.cn/index/tzgg.htm', 'tynu.edu.cn/index.htm', 'tynu.edu.cn/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['tynu.edu.cn/index/tzgg.htm', 'tynu.edu.cn/index.htm', 'tynu.edu.cn/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['2PoL'],
     handler,

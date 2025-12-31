@@ -1,6 +1,6 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { config } from '@/config';
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/branches/:user/:repo',
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['github.com/:user/:repo/branches', 'github.com/:user/:repo'],
-    },
+    radar: [
+        {
+            source: ['github.com/:user/:repo/branches', 'github.com/:user/:repo'],
+        },
+    ],
     name: 'Repo Branches',
     maintainers: ['max-arnold'],
     handler,

@@ -1,13 +1,16 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/releases/:brand/:model',
-    radar: {
-        source: ['openwrt.org/toh/:band/:model'],
-        target: '/releases/:model',
-    },
+    radar: [
+        {
+            source: ['openwrt.org/toh/:band/:model'],
+            target: '/releases/:model',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

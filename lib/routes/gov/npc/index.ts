@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,15 +19,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['npc.gov.cn/npc/c2/:caty'],
-    },
+    radar: [
+        {
+            source: ['npc.gov.cn/npc/c2/:caty'],
+        },
+    ],
     name: '通用',
     maintainers: ['233yeee'],
     handler,
     description: `| 立法 | 监督 | 代表 | 理论 | 权威发布 | 滚动新闻 |
-  | ---- | ---- | ---- | ---- | -------- | -------- |
-  | c183 | c184 | c185 | c189 | c12435   | c10134   |`,
+| ---- | ---- | ---- | ---- | -------- | -------- |
+| c183 | c184 | c185 | c189 | c12435   | c10134   |`,
 };
 
 async function handler(ctx) {

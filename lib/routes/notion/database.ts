@@ -1,13 +1,17 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import { Client, isNotionClientError, APIErrorCode } from '@notionhq/client';
-import logger from '@/utils/logger';
-import { config } from '@/config';
-import { parseDate } from '@/utils/parse-date';
-import got from '@/utils/got';
-import { NotionToMarkdown } from 'notion-to-md';
+import { APIErrorCode, Client, isNotionClientError } from '@notionhq/client';
 import { load } from 'cheerio';
 import MarkdownIt from 'markdown-it';
+import { NotionToMarkdown } from 'notion-to-md';
+
+import { config } from '@/config';
+import ConfigNotFoundError from '@/errors/types/config-not-found';
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
+import logger from '@/utils/logger';
+import { parseDate } from '@/utils/parse-date';
+
 const md = MarkdownIt({
     html: true,
     linkify: true,
@@ -31,10 +35,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['notion.so/:id'],
-        target: '/database/:id',
-    },
+    radar: [
+        {
+            source: ['notion.so/:id'],
+            target: '/database/:id',
+        },
+    ],
     name: 'Database',
     maintainers: ['curly210102'],
     handler,
@@ -53,7 +59,7 @@ export const route: Route = {
 
 async function handler(ctx) {
     if (!config.notion.key) {
-        throw new Error('Notion RSS is disabled due to the lack of NOTION_TOKEN(<a href="https://docs.rsshub.app/install/#pei-zhi-bu-fen-rss-mo-kuai-pei-zhi">relevant config</a>)');
+        throw new ConfigNotFoundError('Notion RSS is disabled due to the lack of NOTION_TOKEN(<a href="https://docs.rsshub.app/deploy/config#route-specific-configurations">relevant config</a>)');
     }
 
     const databaseId = ctx.req.param('databaseId');
@@ -159,9 +165,9 @@ async function handler(ctx) {
 
         if (isNotionClientError(error)) {
             if (error.statusCode === APIErrorCode.ObjectNotFound) {
-                throw new Error('The database is not exist');
+                throw new InvalidParameterError('The database is not exist');
             } else if (error.statusCode === APIErrorCode.Unauthorized) {
-                throw new Error('Please check the config of NOTION_TOKEN');
+                throw new ConfigNotFoundError('Please check the config of NOTION_TOKEN');
             } else {
                 ctx.throw(error.statusCode, 'Notion API Error');
             }

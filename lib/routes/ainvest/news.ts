@@ -1,13 +1,16 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { getHeaders, randomString, decryptAES } from './utils';
+
+import { decryptAES, getHeaders, randomString } from './utils';
 
 export const route: Route = {
     path: '/news',
     categories: ['finance'],
     example: '/ainvest/news',
     parameters: {},
+    view: ViewType.Articles,
     features: {
         requireConfig: false,
         requirePuppeteer: false,
@@ -16,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ainvest.com/news'],
-    },
+    radar: [
+        {
+            source: ['ainvest.com/news'],
+        },
+    ],
     name: 'Latest News',
     maintainers: ['TonyRL'],
     handler,

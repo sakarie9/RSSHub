@@ -1,14 +1,12 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
+import { load } from 'cheerio';
 
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+import timezone from '@/utils/timezone';
+
+import { renderArticle } from './templates/article';
 
 export const route: Route = {
     path: '/database',
@@ -23,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['k.caixin.com/web', 'k.caixin.com/'],
-    },
+    radar: [
+        {
+            source: ['k.caixin.com/web', 'k.caixin.com/'],
+        },
+    ],
     name: '财新数据通',
     maintainers: ['nczitzk'],
     handler,
@@ -56,7 +56,7 @@ async function handler() {
                 const content = load(detailResponse.data);
 
                 item.pubDate = timezone(parseDate(content('#pubtime_baidu').text()), +8);
-                item.description = art(path.join(__dirname, 'templates/article.art'), {
+                item.description = renderArticle({
                     item,
                     $: content,
                 });

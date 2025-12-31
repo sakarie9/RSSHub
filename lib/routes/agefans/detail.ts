@@ -1,6 +1,8 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
+
 import { rootUrl } from './utils';
 
 export const route: Route = {
@@ -16,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['agemys.org/detail/:id'],
-    },
+    radar: [
+        {
+            source: ['agemys.org/detail/:id'],
+        },
+    ],
     name: '番剧详情',
     maintainers: ['s2marine'],
     handler,
@@ -42,7 +46,7 @@ async function handler(ctx) {
                 link: a.attr('href').replace('http://', 'https://'),
             };
         })
-        .reverse();
+        .toReversed();
 
     return {
         title: `AGE动漫 - ${ldJson.name}`,

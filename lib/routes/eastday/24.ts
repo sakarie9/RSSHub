@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const categories = {
     社会: 'shehui',
@@ -36,22 +37,24 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['mini.eastday.com/'],
-        target: '/24',
-    },
+    radar: [
+        {
+            source: ['mini.eastday.com/'],
+            target: '/24',
+        },
+    ],
     name: '24 小时热闻',
     maintainers: ['nczitzk'],
     handler,
     url: 'mini.eastday.com/',
     description: `| 推荐 | 社会 | 娱乐 | 国际 | 军事 |
-  | ---- | ---- | ---- | ---- | ---- |
+| ---- | ---- | ---- | ---- | ---- |
 
-  | 养生 | 汽车 | 体育 | 财经 | 游戏 |
-  | ---- | ---- | ---- | ---- | ---- |
+| 养生 | 汽车 | 体育 | 财经 | 游戏 |
+| ---- | ---- | ---- | ---- | ---- |
 
-  | 科技 | 国内 | 宠物 | 情感 | 人文 | 教育 |
-  | ---- | ---- | ---- | ---- | ---- | ---- |`,
+| 科技 | 国内 | 宠物 | 情感 | 人文 | 教育 |
+| ---- | ---- | ---- | ---- | ---- | ---- |`,
 };
 
 async function handler(ctx) {

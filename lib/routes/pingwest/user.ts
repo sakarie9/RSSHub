@@ -1,7 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -17,18 +19,20 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['pingwest.com/user/:uid/:type', 'pingwest.com/'],
-        target: '/user/:uid/:type',
-    },
+    radar: [
+        {
+            source: ['pingwest.com/user/:uid/:type', 'pingwest.com/'],
+            target: '/user/:uid/:type',
+        },
+    ],
     name: '用户',
     maintainers: ['sanmmm'],
     handler,
     description: `内容类型
 
-  | 文章    | 动态  |
-  | ------- | ----- |
-  | article | state |
+| 文章    | 动态  |
+| ------- | ----- |
+| article | state |
 
   参数
 

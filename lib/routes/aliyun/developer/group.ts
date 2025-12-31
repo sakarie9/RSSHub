@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['developer.aliyun.com/group/:type'],
-    },
+    radar: [
+        {
+            source: ['developer.aliyun.com/group/:type'],
+        },
+    ],
     name: '开发者社区 - 主题',
     maintainers: ['umm233'],
     handler,
@@ -40,9 +43,7 @@ async function handler(ctx) {
     const $ = load(data);
     const title = $('div[class="header-information-title"]')
         .contents()
-        .filter(function () {
-            return this.nodeType === 3;
-        })
+        .filter((element) => element.nodeType === 3)
         .text()
         .trim();
     const desc = $('div[class="header-information"]').find('span').last().text().trim();
@@ -52,20 +53,16 @@ async function handler(ctx) {
         title: `阿里云开发者社区-${title}`,
         link,
         description: desc,
-        item:
-            list &&
-            list
-                .map((index, item) => {
-                    item = $(item);
-                    const desc = item.find('.question-desc');
-                    const description = item.find('.browse').text() + ' ' + desc.find('.answer').text();
-                    return {
-                        title: item.find('.question-title').text().trim() || item.find('a p').text().trim(),
-                        link: item.find('a').attr('href'),
-                        pubDate: parseDate(item.find('.time').text()),
-                        description,
-                    };
-                })
-                .get(),
+        item: list.toArray().map((item) => {
+            item = $(item);
+            const desc = item.find('.question-desc');
+            const description = item.find('.browse').text() + ' ' + desc.find('.answer').text();
+            return {
+                title: item.find('.question-title').text().trim() || item.find('a p').text().trim(),
+                link: item.find('a').attr('href'),
+                pubDate: parseDate(item.find('.time').text()),
+                description,
+            };
+        }),
     };
 }

@@ -1,15 +1,18 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/pe/:id?',
-    radar: {
-        source: ['pe2016.sspu.edu.cn/:id/list.htm'],
-        target: '/pe/:id',
-    },
+    radar: [
+        {
+            source: ['pe2016.sspu.edu.cn/:id/list.htm'],
+            target: '/pe/:id',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['nczitzk'],
     handler,

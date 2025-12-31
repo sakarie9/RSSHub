@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 const FQDN = 'feedback.remnote.com';
 const apiGateway = 'https://gateway.hellonext.co';
 
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['remnote.com/changelog', 'remnote.com/'],
-    },
+    radar: [
+        {
+            source: ['remnote.com/changelog', 'remnote.com/'],
+        },
+    ],
     name: 'Changelog',
     maintainers: ['TonyRL', 'amakerlife'],
     handler,

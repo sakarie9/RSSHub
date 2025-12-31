@@ -1,12 +1,16 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
+
 import util from './utils';
 
 export const route: Route = {
     path: '/home',
     categories: ['social-media'],
+    view: ViewType.Articles,
     example: '/jianshu/home',
     parameters: {},
     features: {
@@ -17,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.jianshu.com/'],
-    },
+    radar: [
+        {
+            source: ['www.jianshu.com/'],
+        },
+    ],
     name: '首页',
     maintainers: ['DIYgod', 'HenryQW', 'JimenezLi'],
     handler,
@@ -38,7 +44,7 @@ async function handler() {
     const data = response.data;
 
     const $ = load(data);
-    const list = $('.note-list li').get();
+    const list = $('.note-list li').toArray();
 
     const result = await util.ProcessFeed(list, cache);
 

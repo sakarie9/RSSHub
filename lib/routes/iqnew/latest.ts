@@ -1,8 +1,9 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['iqnew.com/post/new_100/', 'iqnew.com/'],
-    },
+    radar: [
+        {
+            source: ['iqnew.com/post/new_100/', 'iqnew.com/'],
+        },
+    ],
     name: '最近更新',
     maintainers: ['nczitzk'],
     handler,

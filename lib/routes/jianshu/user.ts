@@ -1,13 +1,17 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
+
 import util from './utils';
 
 export const route: Route = {
     path: '/user/:id',
     categories: ['social-media'],
     example: '/jianshu/user/yZq3ZV',
+    view: ViewType.Articles,
     parameters: { id: '作者 id, 可在作者主页 URL 中找到' },
     features: {
         requireConfig: false,
@@ -17,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.jianshu.com/u/:id'],
-    },
+    radar: [
+        {
+            source: ['www.jianshu.com/u/:id'],
+        },
+    ],
     name: '作者',
     maintainers: ['DIYgod', 'HenryQW', 'JimenezLi'],
     handler,
@@ -39,7 +45,7 @@ async function handler(ctx) {
     const data = response.data;
 
     const $ = load(data);
-    const list = $('.note-list li').get();
+    const list = $('.note-list li').toArray();
 
     const result = await util.ProcessFeed(list, cache);
 

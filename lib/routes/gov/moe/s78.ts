@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['moe.gov.cn/s78/:column/tongzhi', 'moe.gov.cn/s78/:column'],
-    },
+    radar: [
+        {
+            source: ['moe.gov.cn/s78/:column/tongzhi', 'moe.gov.cn/s78/:column'],
+        },
+    ],
     name: '司局通知',
     maintainers: ['TonyRL'],
     handler,

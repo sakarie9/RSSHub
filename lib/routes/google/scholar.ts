@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/scholar/:query',
@@ -15,12 +16,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    name: 'Keywords Monitoring',
+    name: 'Scholar Keywords Monitoring',
     maintainers: ['HenryQW'],
     handler,
-    description: `:::warning
+    description: `::: warning
   Google Scholar has strict anti-crawling mechanism implemented, the demo below doesn't guarantee availability. Please deploy your own instance as it might increase the stability.
-  :::
+:::
 
   1.  Basic mode, sample query is the keywords desired, eg.「data visualization」, [https://rsshub.app/google/scholar/data+visualization](https://rsshub.app/google/scholar/data+visualization).
 
@@ -48,7 +49,7 @@ async function handler(ctx) {
     });
 
     const $ = load(response.data);
-    const list = $('#gs_res_ccl_mid .gs_r.gs_or.gs_scl .gs_ri').get();
+    const list = $('#gs_res_ccl_mid .gs_r.gs_or.gs_scl .gs_ri').toArray();
 
     const out = list.map((item) => {
         const $ = load(item);

@@ -1,16 +1,19 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import { parseDate } from '@/utils/parse-date';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
 import { config } from '@/config';
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/:keywords/:security_key?',
-    radar: {
-        source: ['lightNovel.us/'],
-        target: '/:keywords/:security_key',
-    },
+    radar: [
+        {
+            source: ['lightNovel.us/'],
+            target: '/:keywords/:security_key',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['nightmare-mio'],
     handler,

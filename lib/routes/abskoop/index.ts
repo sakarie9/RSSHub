@@ -1,19 +1,25 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['ahhhhfs.com/'],
-        target: '',
-    },
-    name: 'Unknown',
+    radar: [
+        {
+            source: ['ahhhhfs.com/'],
+            target: '',
+        },
+    ],
+    name: '存档列表',
     maintainers: ['zhenhappy'],
     handler,
     url: 'ahhhhfs.com/',
+    features: {
+        nsfw: true,
+    },
 };
 
 async function handler(ctx) {

@@ -1,8 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const titles = {
     1: '新闻',
@@ -22,15 +22,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['sunborngame.com/:category', 'sunborngame.com/'],
-    },
+    radar: [
+        {
+            source: ['sunborngame.com/:category', 'sunborngame.com/'],
+        },
+    ],
     name: '情报局',
     maintainers: ['nczitzk'],
     handler,
     description: `| 新闻 | 公告 |
-  | ---- | ---- |
-  | 1    | 3    |`,
+| ---- | ---- |
+| 1    | 3    |`,
 };
 
 async function handler(ctx) {

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ccnu.91wllm.com/news/index/tag/tzgg', 'ccnu.91wllm.com/'],
-    },
+    radar: [
+        {
+            source: ['ccnu.91wllm.com/news/index/tag/tzgg', 'ccnu.91wllm.com/'],
+        },
+    ],
     name: '就业信息',
     maintainers: ['jackyu1996'],
     handler,

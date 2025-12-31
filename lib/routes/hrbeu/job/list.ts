@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import { finishArticleItem } from '@/utils/wechat-mp';
+
 const rootUrl = 'http://job.hrbeu.edu.cn';
 
 const idMap = {
@@ -30,8 +32,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    name: 'Unknown',
+    name: '就业服务平台',
     maintainers: ['Derekmini'],
+    description: `| 通知公告 | 热点新闻 |
+| :------: | :------: |
+|   tzgg   |   rdxw   |`,
     handler,
 };
 
@@ -47,7 +52,8 @@ async function handler(ctx) {
     const $ = load(response.data);
 
     const list = $('li.list_item.i1')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             let link = $(item).find('a').attr('href');
             if (link.includes('HrbeuJY')) {
                 link = `${rootUrl}${link}`;
@@ -57,8 +63,7 @@ async function handler(ctx) {
                 pubDate: parseDate($(item).find('.Article_PublishDate').text()),
                 link,
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

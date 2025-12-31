@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate, parseRelativeDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/:params?',
@@ -18,10 +19,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['elasticsearch.cn/:params', 'elasticsearch.cn/'],
-        target: '/:params',
-    },
+    radar: [
+        {
+            source: ['elasticsearch.cn/:params', 'elasticsearch.cn/'],
+            target: '/:params',
+        },
+    ],
     name: '发现',
     maintainers: ['nczitzk'],
     handler,

@@ -1,6 +1,7 @@
+import { load } from 'cheerio';
+
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 //
 // 测试http://localhost:1200/cctv/xinwen1j1
@@ -9,7 +10,7 @@ import { parseDate } from '@/utils/parse-date';
 async function loadContent(link) {
     const res = await got({ method: 'get', url: link });
     const $ = load(res.data);
-    // console.log($('div.image').get().text())
+    // console.log($('div.image').toArray().text())
     // console.log('********')
     const js_txt = '' + $('script');
 
@@ -53,7 +54,7 @@ const ProcessFeed = (data) =>
             return { ...single, ...other };
         })
     );
-export default async () => {
+const xinwen1j1 = async () => {
     const baseUrl = 'https://api.cntv.cn/NewVideo/getVideoListByColumn?id=TOPC1451559066181661&n=20&sort=desc&p=1&mode=0&serviceId=tvcctv';
     // 获取要处理的页面
     const res = await got({
@@ -80,3 +81,4 @@ export default async () => {
         item: result,
     };
 };
+export default xinwen1j1;

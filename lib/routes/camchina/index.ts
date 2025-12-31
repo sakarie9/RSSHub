@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/:id?',
@@ -16,15 +17,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cste.org.cn/categories/:id', 'cste.org.cn/'],
-    },
+    radar: [
+        {
+            source: ['cste.org.cn/categories/:id', 'cste.org.cn/'],
+        },
+    ],
     name: '栏目',
     maintainers: ['nczitzk'],
     handler,
     description: `| 新闻 | 通告栏 |
-  | ---- | ------ |
-  | 1    | 2      |`,
+| ---- | ------ |
+| 1    | 2      |`,
 };
 
 async function handler(ctx) {

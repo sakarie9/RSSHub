@@ -1,13 +1,11 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
+import { load } from 'cheerio';
 
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderIndexDescription } from './templates/index';
 import { domainValidation } from './utils';
 
 export const route: Route = {
@@ -22,11 +20,14 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['91porn.com/index.php'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['91porn.com/index.php'],
+            target: '',
+        },
+    ],
     name: 'Author',
     maintainers: ['TonyRL'],
     handler,
@@ -68,7 +69,7 @@ async function handler(ctx) {
                 const $ = load(data);
 
                 item.pubDate = parseDate($('.title-yakov').eq(0).text(), 'YYYY-MM-DD');
-                item.description = art(path.join(__dirname, 'templates/index.art'), {
+                item.description = renderIndexDescription({
                     link: item.link,
                     poster: item.poster,
                 });

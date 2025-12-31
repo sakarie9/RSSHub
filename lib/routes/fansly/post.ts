@@ -1,7 +1,7 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
+import type { Route } from '@/types';
 import { parseDate } from '@/utils/parse-date';
-import { getAccountByUsername, getTimelineByAccountId, parseDescription, baseUrl } from './utils';
+
+import { baseUrl, getAccountByUsername, getTimelineByAccountId, parseDescription } from './utils';
 
 export const route: Route = {
     path: '/user/:username',
@@ -15,10 +15,13 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['fansly.com/:username/posts', 'fansly.com/:username/media'],
-    },
+    radar: [
+        {
+            source: ['fansly.com/:username/posts', 'fansly.com/:username/media'],
+        },
+    ],
     name: 'User Timeline',
     maintainers: ['TonyRL'],
     handler,
@@ -27,7 +30,7 @@ export const route: Route = {
 async function handler(ctx) {
     const username = ctx.req.param('username');
 
-    const account = await getAccountByUsername(username, cache.tryGet);
+    const account = await getAccountByUsername(username);
     const timeline = await getTimelineByAccountId(account.id);
 
     const items = timeline.posts.map((post) => ({

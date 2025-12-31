@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['liquipedia.net/dota2/:id'],
-    },
+    radar: [
+        {
+            source: ['liquipedia.net/dota2/:id'],
+        },
+    ],
     name: 'Dota2 战队最近比赛结果',
     maintainers: ['wzekin'],
     handler,

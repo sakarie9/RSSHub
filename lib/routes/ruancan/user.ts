@@ -1,11 +1,14 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import fetchFeed from './utils';
 
 export const route: Route = {
     path: '/user/:id',
-    radar: {
-        source: ['ruancan.com/i/:id', 'ruancan.com/'],
-    },
+    radar: [
+        {
+            source: ['ruancan.com/i/:id', 'ruancan.com/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

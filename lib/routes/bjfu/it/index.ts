@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+import iconv from 'iconv-lite';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
+
 import util from './utils';
-import iconv from 'iconv-lite';
 
 export const route: Route = {
     path: '/it/:type',
@@ -18,15 +20,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['it.bjfu.edu.cn/:type/index.html'],
-    },
+    radar: [
+        {
+            source: ['it.bjfu.edu.cn/:type/index.html'],
+        },
+    ],
     name: '信息学院通知',
     maintainers: ['wzc-blog'],
     handler,
     description: `| 学院新闻 | 科研动态 | 本科生培养 | 研究生培养 |
-  | -------- | -------- | ---------- | ---------- |
-  | xyxw     | kydt     | pydt       | pydt2      |`,
+| -------- | -------- | ---------- | ---------- |
+| xyxw     | kydt     | pydt       | pydt2      |`,
 };
 
 async function handler(ctx) {

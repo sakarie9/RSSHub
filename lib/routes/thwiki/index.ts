@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import dayjs from 'dayjs';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/calendar/:before?/:after?',
@@ -15,10 +16,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['thwiki.cc/', 'thwiki.cc/日程表'],
-        target: '/calendar',
-    },
+    radar: [
+        {
+            source: ['thwiki.cc/', 'thwiki.cc/日程表'],
+            target: '/calendar',
+        },
+    ],
     name: 'Calendar',
     maintainers: ['aether17'],
     handler,

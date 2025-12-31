@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['indienova.com/usergames', 'indienova.com/'],
-    },
+    radar: [
+        {
+            source: ['indienova.com/usergames', 'indienova.com/'],
+        },
+    ],
     name: '会员开发游戏库',
     maintainers: ['TonyRL'],
     handler,

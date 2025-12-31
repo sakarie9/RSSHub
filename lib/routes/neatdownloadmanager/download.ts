@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/download/:os?',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['neatdownloadmanager.com/index.php', 'neatdownloadmanager.com/'],
-    },
+    radar: [
+        {
+            source: ['neatdownloadmanager.com/index.php', 'neatdownloadmanager.com/'],
+        },
+    ],
     name: 'Download',
     maintainers: ['nczitzk'],
     handler,

@@ -1,15 +1,19 @@
-import { Route } from '@/types';
-import { parseDate } from '@/utils/parse-date';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['zrblog.net/'],
-        target: '',
-    },
-    name: 'Unknown',
+    categories: ['blog'],
+    example: '/zrblog',
+    radar: [
+        {
+            source: ['zrblog.net/'],
+        },
+    ],
+    name: '最新文章',
     maintainers: ['cnkmmk'],
     handler,
     url: 'zrblog.net/',
@@ -21,7 +25,8 @@ async function handler() {
     const $ = load(response.data);
 
     const list = $('div.art_img_box')
-        .map((i, e) => {
+        .toArray()
+        .map((e) => {
             const element = $(e);
             const title = element.find('h2 > a').attr('title');
             const link = element.find('h2 > a').attr('href');
@@ -34,8 +39,7 @@ async function handler() {
                 link,
                 pubDate: parseDate(dateraw, '发布日期：YYYY年MM月DD日'),
             };
-        })
-        .get();
+        });
 
     return {
         title: '赵容部落',

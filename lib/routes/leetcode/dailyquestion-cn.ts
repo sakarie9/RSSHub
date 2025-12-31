@@ -1,18 +1,17 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderQuestionDescription } from './templates/question-description';
 
 const host = 'https://leetcode.cn';
 
 export const route: Route = {
     path: '/dailyquestion/cn',
-    radar: {
-        source: ['leetcode.cn/'],
-    },
+    radar: [
+        {
+            source: ['leetcode.cn/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,
@@ -109,7 +108,7 @@ async function handler() {
 
     const rssData = {
         title: question.frontedId + '.' + question.titleSlug,
-        description: art(path.join(__dirname, 'templates/question-description.art'), {
+        description: renderQuestionDescription({
             question,
         }),
         link: question.link,

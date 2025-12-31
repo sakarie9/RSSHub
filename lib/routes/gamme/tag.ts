@@ -1,7 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import { isValidHost } from '@/utils/valid-host';
 
@@ -15,7 +17,7 @@ export const route: Route = {
 async function handler(ctx) {
     const { domain = 'news', tag } = ctx.req.param();
     if (!isValidHost(domain)) {
-        throw new Error('Invalid domain');
+        throw new InvalidParameterError('Invalid domain');
     }
     const baseUrl = `https://${domain}.gamme.com.tw`;
     const pageUrl = `${baseUrl}/tag/${tag}`;

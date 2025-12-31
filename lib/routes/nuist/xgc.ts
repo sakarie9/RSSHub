@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const baseTitle = '南信大学生工作处';
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xgc.nuist.edu.cn/', 'xgc.nuist.edu.cn/419/list.htm'],
-    },
+    radar: [
+        {
+            source: ['xgc.nuist.edu.cn/', 'xgc.nuist.edu.cn/419/list.htm'],
+        },
+    ],
     name: '南信大学生工作处',
     maintainers: ['gylidian'],
     handler,

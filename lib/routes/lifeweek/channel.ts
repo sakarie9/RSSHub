@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
+
 import getRssItem from './utils';
 
 const rootApiUrl = 'https://www.lifeweek.com.cn/api/userWebFollow/getFollowTagContentList?type=3&sort=2&tagId';
@@ -9,10 +10,12 @@ const articleRootUrl = 'https://www.lifeweek.com.cn/article';
 
 export const route: Route = {
     path: '/channel/:id',
-    radar: {
-        source: ['lifeweek.com.cn/column/:channel'],
-        target: '/channel/:channel',
-    },
+    radar: [
+        {
+            source: ['lifeweek.com.cn/column/:channel'],
+            target: '/channel/:channel',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

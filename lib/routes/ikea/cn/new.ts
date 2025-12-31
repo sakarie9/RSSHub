@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import { generateRequestHeaders, generateProductItem } from './utils';
+
+import { generateProductItem, generateRequestHeaders } from './utils';
 
 const request = ({ moreToken = '' }) =>
     got({
@@ -27,9 +28,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ikea.cn/cn/zh/new/', 'ikea.cn/'],
-    },
+    radar: [
+        {
+            source: ['ikea.cn/cn/zh/new/', 'ikea.cn/'],
+        },
+    ],
     name: '中国 - 当季新品推荐',
     maintainers: ['jzhangdev'],
     handler,

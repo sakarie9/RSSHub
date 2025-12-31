@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 const baseUrl = 'https://pkmer.cn';
 
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['pkmer.cn/page/*'],
-    },
+    radar: [
+        {
+            source: ['pkmer.cn/page/*'],
+        },
+    ],
     name: '最近更新',
     maintainers: ['Gnoyong'],
     handler,

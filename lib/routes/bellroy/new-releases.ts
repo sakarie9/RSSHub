@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 
 export const route: Route = {
@@ -14,9 +14,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bellroy.com/collection/new-releases', 'bellroy.com/'],
-    },
+    radar: [
+        {
+            source: ['bellroy.com/collection/new-releases', 'bellroy.com/'],
+        },
+    ],
     name: 'New Releases',
     maintainers: ['EthanWng97'],
     handler,

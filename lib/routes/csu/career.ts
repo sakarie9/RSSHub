@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
+
 import { unzip } from './utils';
 
 export const route: Route = {
@@ -19,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['career.csu.edu.cn/campus/index/category/1', 'career.csu.edu.cn/campus', 'career.csu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['career.csu.edu.cn/campus/index/category/1', 'career.csu.edu.cn/campus', 'career.csu.edu.cn/'],
+        },
+    ],
     name: '就业信息网招聘信息',
     maintainers: ['TonyRL'],
     handler,

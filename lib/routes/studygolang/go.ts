@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import { FetchGoItems } from './utils';
 
 export const route: Route = {
@@ -14,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['studygolang.com/go/:id', 'studygolang.com/'],
-    },
+    radar: [
+        {
+            source: ['studygolang.com/go/:id', 'studygolang.com/'],
+        },
+    ],
     name: '板块',
     maintainers: ['nczitzk'],
     handler,

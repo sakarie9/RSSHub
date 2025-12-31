@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
@@ -16,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['eleduck.com/categories/5', 'eleduck.com/'],
-    },
+    radar: [
+        {
+            source: ['eleduck.com/categories/5', 'eleduck.com/'],
+        },
+    ],
     name: '工作机会',
     maintainers: ['sfyumi'],
     handler,

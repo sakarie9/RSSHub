@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -16,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cn-healthcare.com/'],
-    },
+    radar: [
+        {
+            source: ['cn-healthcare.com/'],
+        },
+    ],
     name: '首页',
     maintainers: ['qnloft'],
     handler,

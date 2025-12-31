@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import fetchFeed from './utils';
 
 export const route: Route = {
@@ -14,10 +15,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ruancan.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['ruancan.com/'],
+            target: '',
+        },
+    ],
     name: '搜索',
     maintainers: [],
     handler,

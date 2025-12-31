@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const DOMAIN = 'www.moj.gov.cn';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.moj.gov.cn/lfyjzj/lflfyjzj/*', 'www.moj.gov.cn/pub/sfbgw/lfyjzj/lflfyjzj/*'],
-    },
+    radar: [
+        {
+            source: ['www.moj.gov.cn/lfyjzj/lflfyjzj/*', 'www.moj.gov.cn/pub/sfbgw/lfyjzj/lflfyjzj/*'],
+        },
+    ],
     name: '立法意见征集',
     maintainers: ['la3rence'],
     handler,

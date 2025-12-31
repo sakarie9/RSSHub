@@ -1,8 +1,9 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -27,15 +28,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['renjian.163.com/:category', 'renjian.163.com/'],
-    },
+    radar: [
+        {
+            source: ['renjian.163.com/:category', 'renjian.163.com/'],
+        },
+    ],
     name: '人间',
     maintainers: ['nczitzk'],
     handler,
     description: `| 特写  | 记事  | 大写  | 好读  | 看客  |
-  | ----- | ----- | ----- | ----- | ----- |
-  | texie | jishi | daxie | haodu | kanke |`,
+| ----- | ----- | ----- | ----- | ----- |
+| texie | jishi | daxie | haodu | kanke |`,
 };
 
 async function handler(ctx) {

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 const url = 'https://seugs.seu.edu.cn/26671/list.htm';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['seugs.seu.edu.cn/26671/list.htm', 'seugs.seu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['seugs.seu.edu.cn/26671/list.htm', 'seugs.seu.edu.cn/'],
+        },
+    ],
     name: '研究生院全部公告',
     maintainers: ['Denkiyohou'],
     handler,

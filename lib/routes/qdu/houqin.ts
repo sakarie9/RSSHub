@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const base = 'https://houqin.qdu.edu.cn/';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['houqin.qdu.edu.cn/tzgg.htm', 'houqin.qdu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['houqin.qdu.edu.cn/tzgg.htm', 'houqin.qdu.edu.cn/'],
+        },
+    ],
     name: '后勤管理处通知',
     maintainers: ['abc1763613206'],
     handler,

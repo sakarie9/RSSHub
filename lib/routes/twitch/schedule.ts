@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 
 // https://github.com/streamlink/streamlink/blob/master/src/streamlink/plugins/twitch.py#L286
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.twitch.tv/:login/schedule'],
-    },
+    radar: [
+        {
+            source: ['www.twitch.tv/:login/schedule'],
+        },
+    ],
     name: 'Stream Schedule',
     maintainers: ['hoilc'],
     handler,
@@ -74,7 +77,7 @@ async function handler(ctx) {
     const streamScheduleData = response.data[1].data;
 
     if (!streamScheduleData.user.id) {
-        throw new Error(`Username does not exist`);
+        throw new InvalidParameterError(`Username does not exist`);
     }
 
     const displayName = channelShellData.userOrError.displayName;

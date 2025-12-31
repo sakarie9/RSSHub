@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,16 +18,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ccf.org.cn/:category', 'ccf.org.cn/'],
-        target: '/news/:category',
-    },
+    radar: [
+        {
+            source: ['ccf.org.cn/:category', 'ccf.org.cn/'],
+            target: '/news/:category',
+        },
+    ],
     name: '新闻',
     maintainers: ['nczitzk'],
     handler,
     description: `| CCF 新闻    | CCF 聚焦 | ACM 信息  |
-  | ----------- | -------- | --------- |
-  | Media\_list | Focus    | ACM\_News |`,
+| ----------- | -------- | --------- |
+| Media\_list | Focus    | ACM\_News |`,
 };
 
 async function handler(ctx) {

@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-const url = 'https://www.ndss-symposium.org';
 import { parseDate } from '@/utils/parse-date';
+
+const url = 'https://www.ndss-symposium.org';
 
 export const route: Route = {
     path: '/ndss',
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ndss-symposium.org/'],
-    },
+    radar: [
+        {
+            source: ['ndss-symposium.org/'],
+        },
+    ],
     name: 'Accepted papers',
     maintainers: ['ZeddYu'],
     handler,

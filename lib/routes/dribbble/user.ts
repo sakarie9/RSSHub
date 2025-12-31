@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -14,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['dribbble.com/:name'],
-    },
+    radar: [
+        {
+            source: ['dribbble.com/:name'],
+        },
+    ],
     name: 'User (or team)',
     maintainers: ['DIYgod', 'loganrockmore'],
     handler,
@@ -28,5 +31,5 @@ async function handler(ctx) {
 
     const title = `Dribbble - user ${name}`;
 
-    return await utils.getData(ctx, url, title);
+    return await utils.getData(url, title);
 }

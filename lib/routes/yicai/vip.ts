@@ -1,9 +1,10 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 
-import { rootUrl, ProcessItems } from './utils';
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
+import got from '@/utils/got';
+
+import { ProcessItems, rootUrl } from './utils';
 
 export const route: Route = {
     path: '/vip/:id?',
@@ -18,10 +19,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yicai.com/vip/product/:id', 'yicai.com/'],
-        target: '/vip/:id',
-    },
+    radar: [
+        {
+            source: ['yicai.com/vip/product/:id', 'yicai.com/'],
+            target: '/vip/:id',
+        },
+    ],
     name: 'VIP 频道',
     maintainers: ['nczitzk'],
     handler,

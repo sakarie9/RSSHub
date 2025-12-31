@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { JSDOM } from 'jsdom';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/hottest',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.hotukdeals.com/'],
-    },
+    radar: [
+        {
+            source: ['www.hotukdeals.com/'],
+        },
+    ],
     name: 'hottest',
     maintainers: ['DIYgod'],
     handler,

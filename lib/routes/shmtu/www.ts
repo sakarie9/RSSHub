@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const host = 'https://www.shmtu.edu.cn';
 
 async function loadContent(link) {
@@ -36,9 +38,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.shmtu.edu.cn/:type'],
-    },
+    radar: [
+        {
+            source: ['www.shmtu.edu.cn/:type'],
+        },
+    ],
     name: '官网信息',
     maintainers: ['imbytecat', 'simonsmh'],
     handler,

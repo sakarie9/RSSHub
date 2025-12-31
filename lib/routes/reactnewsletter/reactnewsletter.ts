@@ -1,15 +1,19 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
-const currentURL = 'https://reactnewsletter.com/issues';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
+const currentURL = 'https://reactnewsletter.com/issues';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['bytes.dev/issues', 'bytes.dev/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['bytes.dev/issues', 'bytes.dev/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['meixger'],
     handler,

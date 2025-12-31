@@ -1,15 +1,18 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { ProcessForm, ProcessFeed } from './utils';
+
+import { ProcessFeed, ProcessForm } from './utils';
 
 export const route: Route = {
     path: '/tag/:tagId?',
-    radar: {
-        source: ['mob.iyingdi.com/fine/:tagId'],
-        target: '/tag/:tagId',
-    },
+    radar: [
+        {
+            source: ['mob.iyingdi.com/fine/:tagId'],
+            target: '/tag/:tagId',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['auto-bot-ty'],
     handler,

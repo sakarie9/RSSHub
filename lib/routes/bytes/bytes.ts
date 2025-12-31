@@ -1,15 +1,19 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
-const currentURL = 'https://bytes.dev/archives';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
+const currentURL = 'https://bytes.dev/archives';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['bytes.dev/archives', 'bytes.dev/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['bytes.dev/archives', 'bytes.dev/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['meixger'],
     handler,

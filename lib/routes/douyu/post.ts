@@ -1,11 +1,8 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderDescription } from './templates/description';
 
 export const route: Route = {
     path: '/post/:id',
@@ -20,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yuba.douyu.com/p/:id', 'yuba.douyu.com/'],
-    },
+    radar: [
+        {
+            source: ['yuba.douyu.com/p/:id', 'yuba.douyu.com/'],
+        },
+    ],
     name: '鱼吧跟帖',
     maintainers: ['nczitzk'],
     handler,
@@ -59,7 +58,7 @@ async function handler(ctx) {
         title: `${item.nick_name}: ${item.content}`,
         link: `${currentUrl}#${item.comment_id}${item.sub_replies.length > 0 ? `+${item.sub_replies.map((r) => r.comment_id).join('+')}` : ''}`,
         pubDate: parseDate(item.created_ts * 1000),
-        description: art(path.join(__dirname, 'templates/description.art'), {
+        description: renderDescription({
             content: item.content,
             images: item.imglist.map((i) => ({
                 size: i.size,

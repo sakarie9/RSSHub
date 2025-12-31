@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import MarkdownIt from 'markdown-it';
+
+import { config } from '@/config';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { config } from '@/config';
-import MarkdownIt from 'markdown-it';
+
 const md = MarkdownIt({
     html: true,
 });
@@ -21,9 +23,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['gitee.com/:username'],
-    },
+    radar: [
+        {
+            source: ['gitee.com/:username'],
+        },
+    ],
     name: '用户公开动态',
     maintainers: ['TonyRL'],
     handler,

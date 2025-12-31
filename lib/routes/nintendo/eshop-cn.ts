@@ -1,15 +1,20 @@
-import { Route } from '@/types';
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import util from './utils';
-const software_url = 'https://www.nintendoswitch.com.cn/software/';
 import { parseDate } from '@/utils/parse-date';
+
+import util from './utils';
+
+const software_url = 'https://www.nintendoswitch.com.cn/software/';
 
 export const route: Route = {
     path: '/eshop/cn',
-    radar: {
-        source: ['nintendoswitch.com.cn/software', 'nintendoswitch.com.cn/'],
-    },
+    radar: [
+        {
+            source: ['nintendoswitch.com.cn/software', 'nintendoswitch.com.cn/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,
@@ -36,7 +41,7 @@ async function handler() {
         title: "附带导航！一做就上手 第一次的游戏程序设计"
     */
     if (!result.recentSoftwareList) {
-        throw new Error('软件信息不存在，请报告这个问题');
+        throw new InvalidParameterError('软件信息不存在，请报告这个问题');
     }
 
     let data = result.recentSoftwareList.map((item) => ({

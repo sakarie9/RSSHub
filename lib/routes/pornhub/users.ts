@@ -1,11 +1,14 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Data, Route } from '@/types';
+import got from '@/utils/got';
 import { isValidHost } from '@/utils/valid-host';
-import { headers, parseItems } from './utils';
+
+import { getRadarDomin, headers, parseItems } from './utils';
 
 export const route: Route = {
-    path: '/:language?/users/:username',
+    path: '/users/:username/:language?',
     categories: ['multimedia'],
     example: '/pornhub/users/pornhubmodels',
     parameters: { language: 'language, see below', username: 'username, part of the url e.g. `pornhub.com/users/pornhubmodels`' },
@@ -16,21 +19,19 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['pornhub.com/users/:username/*'],
-        target: '/users/:username',
-    },
+    radar: getRadarDomin('/users/:username'),
     name: 'Users',
     maintainers: ['I2IMk', 'queensferryme'],
     handler,
 };
 
-async function handler(ctx) {
+async function handler(ctx): Promise<Data> {
     const { language = 'www', username } = ctx.req.param();
     const link = `https://${language}.pornhub.com/users/${username}/videos`;
     if (!isValidHost(language)) {
-        throw new Error('Invalid language');
+        throw new InvalidParameterError('Invalid language');
     }
 
     const { data: response } = await got(link, { headers });
@@ -40,12 +41,10 @@ async function handler(ctx) {
         .map((e) => parseItems($(e)));
 
     return {
-        title: $('title').first().text(),
+        title: $('.profileUserName a').text(),
         description: $('.aboutMeText').text().trim(),
         link,
-        image: $('#coverPictureDefault').attr('src'),
-        logo: $('#getAvatar').attr('src'),
-        icon: $('#getAvatar').attr('src'),
+        image: $('#getAvatar').attr('src'),
         language: $('html').attr('lang'),
         allowEmpty: true,
         item: items,

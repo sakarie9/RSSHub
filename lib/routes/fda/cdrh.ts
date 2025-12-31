@@ -1,15 +1,18 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/cdrh/:titleOnly?',
-    radar: {
-        source: ['fda.gov/medical-devices/news-events-medical-devices/cdrhnew-news-and-updates', 'fda.gov/'],
-        target: '/cdrh/:titleOnly',
-    },
+    radar: [
+        {
+            source: ['fda.gov/medical-devices/news-events-medical-devices/cdrhnew-news-and-updates', 'fda.gov/'],
+            target: '/cdrh/:titleOnly',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

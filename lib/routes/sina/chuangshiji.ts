@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import { getRollNewsList, parseRollNewsList, parseArticle } from './utils';
+
+import { getRollNewsList, parseArticle, parseRollNewsList } from './utils';
 
 export const route: Route = {
     path: '/csj',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['tech.sina.com.cn/chuangshiji', 'tech.sina.com.cn/'],
-    },
+    radar: [
+        {
+            source: ['tech.sina.com.cn/chuangshiji', 'tech.sina.com.cn/'],
+        },
+    ],
     name: '专栏 - 创事记',
     maintainers: ['xapool'],
     handler,

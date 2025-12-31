@@ -1,7 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 async function getData(category, id) {
     const url = `https://radio.cgtn.com/downapiRES/radio/v1/program/historyList/programId${id}_category${category}_page1.json`;
@@ -27,9 +27,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cgtn.com/podcast/column/:category/*/:id'],
-    },
+    radar: [
+        {
+            source: ['cgtn.com/podcast/column/:category/*/:id'],
+        },
+    ],
     name: '播客',
     maintainers: ['5upernova-heng'],
     handler,

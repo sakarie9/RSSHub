@@ -1,54 +1,81 @@
+import { load } from 'cheerio';
+import { JSDOM } from 'jsdom';
+import { RateLimiterMemory, RateLimiterQueue } from 'rate-limiter-flexible';
+
+import { config } from '@/config';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import utils from './utils';
-import { load } from 'cheerio';
-import { config } from '@/config';
 import logger from '@/utils/logger';
+import { getPuppeteerPage } from '@/utils/puppeteer';
 
-const getCookie = () => {
-    if (Object.keys(config.bilibili.cookies).length > 0) {
-        return config.bilibili.cookies[Object.keys(config.bilibili.cookies)[Math.floor(Math.random() * Object.keys(config.bilibili.cookies).length)]];
+import utils from './utils';
+
+const subtitleLimiter = new RateLimiterMemory({
+    points: 5,
+    duration: 1,
+    execEvenly: true,
+});
+
+const subtitleLimiterQueue = new RateLimiterQueue(subtitleLimiter, {
+    maxQueueSize: 4800,
+});
+
+const getCookie = (disableConfig = false) => {
+    if (Object.keys(config.bilibili.cookies).length > 0 && !disableConfig) {
+        // Update b_lsid in cookies
+        for (const key of Object.keys(config.bilibili.cookies)) {
+            const cookie = config.bilibili.cookies[key];
+            if (cookie) {
+                const updatedCookie = cookie.replace(/b_lsid=[0-9A-F]+_[0-9A-F]+/, `b_lsid=${utils.lsid()}`);
+                config.bilibili.cookies[key] = updatedCookie;
+            }
+        }
+
+        return config.bilibili.cookies[Object.keys(config.bilibili.cookies)[Math.floor(Math.random() * Object.keys(config.bilibili.cookies).length)]] || '';
     }
     const key = 'bili-cookie';
     return cache.tryGet(key, async () => {
-        // default Referer: https://www.bilibili.com is limited
-        // Bilibili return cookies with multiple set-cookie
-        // let response = await got('https://space.bilibili.com/1');
-        // const setCookie = response.headers['set-cookie']; // should contain buvid3 and b_nut
-        // if (typeof setCookie === 'undefined') {
-        //     return '';
-        // }
-        // const cookie = setCookie.map((cookie) => cookie.split(';')[0]);
-        const cookie = [];
-        cookie.push(['b_lsid', utils.lsid()].join('='), ['_uuid', utils._uuid()].join('='), ['b_nut', Date.now().toString()].join('='));
-        let response = await got('https://api.bilibili.com/x/frontend/finger/spi', {
-            headers: {
-                Referer: 'https://www.bilibili.com/',
-                Cookie: cookie.join('; '),
+        let waitForRequest: Promise<string> = new Promise((resolve) => {
+            resolve('');
+        });
+        const { destory } = await getPuppeteerPage('https://space.bilibili.com/1/dynamic', {
+            onBeforeLoad: (page) => {
+                waitForRequest = new Promise<string>((resolve) => {
+                    page.on('requestfinished', async (request) => {
+                        if (request.url() === 'https://api.bilibili.com/x/web-interface/nav') {
+                            const cookies = await page.cookies();
+                            let cookieString = cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
+                            cookieString = cookieString.replace(/b_lsid=[0-9A-F]+_[0-9A-F]+/, `b_lsid=${utils.lsid()}`);
+                            resolve(cookieString);
+                        }
+                    });
+                });
             },
         });
-        cookie.push(['buvid3', encodeURIComponent(response.data.data.b_3)].join('='), ['bvuid4', encodeURIComponent(response.data.data.b_4)].join('='));
-        const e = Math.floor(Date.now() / 1000);
-        const hexsign = utils.hexsign(e);
-        // await got('https://space.bilibili.com/1', {
-        //     headers: {
-        //         Referer: 'https://www.bilibili.com/',
-        //         Cookie: cookie.join('; '),
-        //     },
-        // });
-        try {
-            response = await got.post(`https://api.bilibili.com/bapis/bilibili.api.ticket.v1.Ticket/GenWebTicket?key_id=ec02&hexsign=${hexsign}&context[ts]=${e}&csrf=`, {
-                headers: {
-                    Referer: 'https://space.bilibili.com/1',
-                    Cookie: cookie.join('; '),
-                },
-            });
-            cookie.push(['bili_ticket', response.data.data.ticket].join('='), ['bili_ticket_expires', (Number.parseInt(response.data.data.created_at) + Number.parseInt(response.data.data.ttl)).toString()].join('='));
-        } catch {
-            // HTTPError: Response code 429 (Too Many Requests)
-        }
+        const cookieString = await waitForRequest;
+        logger.debug(`Got bilibili cookie: ${cookieString}`);
+        await destory();
+        return cookieString;
+    });
+};
 
-        return cookie.join('; ');
+const getRenderData = (uid) => {
+    const key = 'bili-web-render-data';
+    return cache.tryGet(key, async () => {
+        const cookie = await getCookie();
+        const { data: response } = await got(`https://space.bilibili.com/${uid}`, {
+            headers: {
+                Referer: 'https://www.bilibili.com/',
+                Cookie: cookie,
+            },
+        });
+        const dom = new JSDOM(response);
+        const document = dom.window.document;
+        const scriptElement = document.querySelector('#__RENDER_DATA__');
+        const innerText = scriptElement ? scriptElement.textContent || '{}' : '{}';
+        const renderData = JSON.parse(decodeURIComponent(innerText));
+        const accessId = renderData.access_id;
+        return accessId;
     });
 };
 
@@ -121,13 +148,9 @@ const getUsernameAndFaceFromUID = async (uid) => {
     if (!name || !face) {
         const cookie = await getCookie();
         const wbiVerifyString = await getWbiVerifyString();
-        // await got(`https://space.bilibili.com/${uid}/`, {
-        //     headers: {
-        //         Referer: `https://www.bilibili.com/`,
-        //         Cookie: cookie,
-        //     },
-        // });
-        const params = utils.addWbiVerifyInfo(`mid=${uid}&token=&platform=web&web_location=1550101`, wbiVerifyString);
+        const dmImgList = utils.getDmImgList();
+        const renderData = await getRenderData(uid);
+        const params = utils.addWbiVerifyInfo(utils.addRenderData(utils.addDmVerifyInfo(`mid=${uid}&token=&platform=web&web_location=1550101`, dmImgList), renderData), wbiVerifyString);
         const { data: nameResponse } = await got(`https://api.bilibili.com/x/space/wbi/acc/info?${params}`, {
             headers: {
                 Referer: `https://space.bilibili.com/${uid}/`,
@@ -137,11 +160,11 @@ const getUsernameAndFaceFromUID = async (uid) => {
         if (nameResponse.data.name) {
             name = nameResponse.data.name;
             face = nameResponse.data.face;
+            cache.set(nameKey, nameResponse.data.name);
+            cache.set(faceKey, nameResponse.data.face);
         } else {
             logger.error(`Error when visiting /x/space/wbi/acc/info: ${JSON.stringify(nameResponse)}`);
         }
-        cache.set(nameKey, name);
-        cache.set(faceKey, face);
     }
     return [name, face];
 };
@@ -158,15 +181,15 @@ const getLiveIDFromShortID = (shortID) => {
     });
 };
 
-const getUsernameFromLiveID = (liveID) => {
-    const key = `bili-username-from-liveID-${liveID}`;
+const getUserInfoFromLiveID = (liveID) => {
+    const key = `bili-userinfo-from-liveID-${liveID}`;
     return cache.tryGet(key, async () => {
         const { data: nameResponse } = await got(`https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid=${liveID}`, {
             headers: {
                 Referer: `https://live.bilibili.com/${liveID}`,
             },
         });
-        return nameResponse.data.info.uname;
+        return nameResponse.data.info;
     });
 };
 
@@ -190,8 +213,94 @@ const getCidFromId = (aid, pid, bvid) => {
         const { data } = await got(`https://api.bilibili.com/x/web-interface/view?${bvid ? `bvid=${bvid}` : `aid=${aid}`}`, {
             referer: `https://www.bilibili.com/video/${bvid || `av${aid}`}`,
         });
-        return data.data.pages[pid - 1].cid;
+        return data?.data?.pages[pid - 1]?.cid;
     });
+};
+
+interface SubtitleEntry {
+    from: number;
+    to: number;
+    sid: number;
+    content: string;
+    music: number;
+}
+
+function secondsToSrtTime(seconds: number): string {
+    const date = new Date(seconds * 1000);
+    const hh = String(date.getUTCHours()).padStart(2, '0');
+    const mm = String(date.getUTCMinutes()).padStart(2, '0');
+    const ss = String(date.getUTCSeconds()).padStart(2, '0');
+    const ms = String(date.getUTCMilliseconds()).padStart(3, '0');
+    return `${hh}:${mm}:${ss},${ms}`;
+}
+
+function convertJsonToSrt(body: SubtitleEntry[]): string {
+    return body
+        .map((item, index) => {
+            const start = secondsToSrtTime(item.from);
+            const end = secondsToSrtTime(item.to);
+            return `${index + 1}\n${start} --> ${end}\n${item.content}\n`;
+        })
+        .join('\n');
+}
+
+const getVideoSubtitle = async (
+    bvid: string
+): Promise<
+    Array<{
+        content: string;
+        lan_doc: string;
+    }>
+> => {
+    if (!bvid) {
+        return [];
+    }
+
+    const cid = await getCidFromId(undefined, 1, bvid);
+    if (!cid) {
+        return [];
+    }
+
+    return cache.tryGet(`bili-video-subtitle-${bvid}`, async () => {
+        await subtitleLimiterQueue.removeTokens(1);
+
+        const getSubtitleData = async (cookie: string) => {
+            const response = await got(`https://api.bilibili.com/x/player/wbi/v2?bvid=${bvid}&cid=${cid}`, {
+                headers: {
+                    Referer: `https://www.bilibili.com/video/${bvid}`,
+                    Cookie: cookie,
+                },
+            });
+            return response;
+        };
+
+        const cookie = await getCookie();
+        const response = await getSubtitleData(cookie);
+        const subtitles = response?.data?.data?.subtitle?.subtitles || [];
+
+        return await Promise.all(
+            subtitles.map(async (subtitle) => {
+                const url = `https:${subtitle.subtitle_url}`;
+                const subtitleData = await cache.tryGet(url, async () => {
+                    const subtitleResponse = await got(url);
+                    return convertJsonToSrt(subtitleResponse?.data?.body || []);
+                });
+                return {
+                    content: subtitleData,
+                    lan_doc: subtitle.lan_doc,
+                };
+            })
+        );
+    });
+};
+
+const getVideoSubtitleAttachment = async (bvid: string) => {
+    const subtitles = await getVideoSubtitle(bvid);
+    return subtitles.map((subtitle) => ({
+        url: `data:text/plain;charset=utf-8,${encodeURIComponent(subtitle.content)}`,
+        mime_type: 'text/srt',
+        title: `字幕 - ${subtitle.lan_doc}`,
+    }));
 };
 
 const getAidFromBvid = async (bvid) => {
@@ -269,9 +378,12 @@ export default {
     getUsernameFromUID,
     getUsernameAndFaceFromUID,
     getLiveIDFromShortID,
-    getUsernameFromLiveID,
+    getUserInfoFromLiveID,
     getVideoNameFromId,
     getCidFromId,
     getAidFromBvid,
     getArticleDataFromCvid,
+    getRenderData,
+    getVideoSubtitle,
+    getVideoSubtitleAttachment,
 };

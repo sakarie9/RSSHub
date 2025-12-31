@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const host = 'https://yzxc.ustb.edu.cn';
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yzxc.ustb.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['yzxc.ustb.edu.cn/'],
+        },
+    ],
     name: '研究生招生信息网',
     maintainers: ['yanbot-team'],
     handler,

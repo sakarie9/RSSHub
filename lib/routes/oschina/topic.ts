@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate, parseRelativeDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
-import { load } from 'cheerio';
 
 async function loadContent(link) {
     const res = await got(link);
@@ -24,9 +25,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['oschina.net/question/topic/:topic'],
-    },
+    radar: [
+        {
+            source: ['oschina.net/question/topic/:topic'],
+        },
+    ],
     name: '问答主题',
     maintainers: ['loveely7'],
     handler,

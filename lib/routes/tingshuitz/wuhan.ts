@@ -1,14 +1,17 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 const baseUrl = 'https://www.whwater.com';
 
 export const route: Route = {
     path: '/wuhan/:channelId?',
-    radar: {
-        source: ['whwater.com/IWater.shtml', 'whwater.com/'],
-        target: '/wuhan',
-    },
+    radar: [
+        {
+            source: ['whwater.com/IWater.shtml', 'whwater.com/'],
+            target: '/wuhan',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

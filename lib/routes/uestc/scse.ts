@@ -1,7 +1,8 @@
-import { Route } from '@/types';
 import { load } from 'cheerio';
-import { parseDate } from '@/utils/parse-date';
 import dayjs from 'dayjs';
+
+import type { Route } from '@/types';
+import { parseDate } from '@/utils/parse-date';
 import puppeteer from '@/utils/puppeteer';
 
 const baseIndexUrl = 'https://www.scse.uestc.edu.cn/index.htm';
@@ -33,9 +34,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['scse.uestc.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['scse.uestc.edu.cn/'],
+        },
+    ],
     name: '计算机科学与工程学院',
     maintainers: ['talengu', 'mobyw'],
     handler,
@@ -43,7 +46,7 @@ export const route: Route = {
 };
 
 async function handler() {
-    const browser = await puppeteer({ stealth: true });
+    const browser = await puppeteer();
     const page = await browser.newPage();
     await page.setRequestInterception(true);
     page.on('request', (request) => {
@@ -72,7 +75,8 @@ async function handler() {
     });
 
     const out = $(items)
-        .map((index, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
             const now = dayjs();
             let date = dayjs(now.year() + '-' + item.find('a span').text());
@@ -102,8 +106,7 @@ async function handler() {
                 link: newsLink,
                 pubDate: newsPubDate,
             };
-        })
-        .get();
+        });
 
     return {
         title: '计算机学院通知',

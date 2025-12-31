@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['wap.ciweimao.com/book/:id'],
-    },
+    radar: [
+        {
+            source: ['wap.ciweimao.com/book/:id'],
+        },
+    ],
     name: '章节',
     maintainers: ['keocheung'],
     handler,
@@ -37,7 +40,7 @@ async function handler(ctx) {
     const $ = load(response);
 
     const firstChapterUrl = $('ul.catalogue-list li a').attr('href');
-    const firstChapterId = firstChapterUrl.substring(firstChapterUrl.lastIndexOf('/') + 1);
+    const firstChapterId = firstChapterUrl.slice(firstChapterUrl.lastIndexOf('/') + 1);
 
     const { data: chapters } = await got(`${chapterUrl}/chapter/${id}/${firstChapterId}`);
     const $c = load(chapters);

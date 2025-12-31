@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/addons/:id',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['addons.mozilla.org/:lang/firefox/addon/:id/versions', 'addons.mozilla.org/:lang/firefox/addon/:id'],
-    },
+    radar: [
+        {
+            source: ['addons.mozilla.org/:lang/firefox/addon/:id/versions', 'addons.mozilla.org/:lang/firefox/addon/:id'],
+        },
+    ],
     name: 'Add-ons Update',
     maintainers: ['DIYgod'],
     handler,
@@ -35,7 +38,7 @@ async function handler(ctx) {
     const versionIds = data.versions.bySlug[id].versionIds;
 
     return {
-        title: `${info.name} 附加组件更新 - Firefox`,
+        title: `${info.name} - Firefox Add-on`,
         description: info.summary || info.description,
         link: `https://addons.mozilla.org/zh-CN/firefox/addon/${id}/versions/`,
         item:

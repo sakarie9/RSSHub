@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 // Get the lastest blog posts of https://konghq.com/
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const BASE_URL = 'https://konghq.com';
@@ -21,9 +22,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['konghq.com/blog/*'],
-    },
+    radar: [
+        {
+            source: ['konghq.com/blog/*'],
+        },
+    ],
     name: '博客最新文章',
     maintainers: ['piglei'],
     handler,

@@ -1,5 +1,6 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
+
 import { baseUrl, getBoards } from './utils';
 
 export const route: Route = {
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['meteor.today/'],
-    },
+    radar: [
+        {
+            source: ['meteor.today/'],
+        },
+    ],
     name: '看板列表',
     maintainers: ['TonyRL'],
     handler,

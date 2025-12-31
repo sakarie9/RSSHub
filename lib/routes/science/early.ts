@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
 import got from '@/utils/got';
 import puppeteer from '@/utils/puppeteer';
 
@@ -19,10 +20,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: true,
     },
-    radar: {
-        source: ['science.org/journal/:journal', 'science.org/toc/:journal/0/0'],
-        target: '/early/:journal',
-    },
+    radar: [
+        {
+            source: ['science.org/journal/:journal', 'science.org/toc/:journal/0/0'],
+            target: '/early/:journal',
+        },
+    ],
     name: 'First Release',
     maintainers: ['y9c', 'TonyRL'],
     handler,

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import got from '@/utils/got';
-import { host, acw_sc__v2, parseList, parseItems } from './utils';
+import ofetch from '@/utils/ofetch';
+
+import { acw_sc__v2, host, parseItems, parseList } from './utils';
 
 export const route: Route = {
     path: '/user/:name',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['segmentfault.com/u/:name'],
-    },
+    radar: [
+        {
+            source: ['segmentfault.com/u/:name'],
+        },
+    ],
     name: '用户',
     maintainers: ['leyuuu', 'Fatpandac'],
     handler,
@@ -28,8 +31,8 @@ async function handler(ctx) {
     const name = ctx.req.param('name');
     const apiURL = `${host}/gateway/homepage/${name}/timeline?size=20&offset=`;
 
-    const response = await got(apiURL);
-    const data = response.data.rows;
+    const response = await ofetch(apiURL);
+    const data = response.rows;
 
     const list = parseList(data);
     const { author } = list[0];

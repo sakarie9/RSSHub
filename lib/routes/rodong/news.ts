@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const host = 'http://www.rodong.rep.kp';
@@ -19,17 +20,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['rodong.rep.kp/cn/index.php', 'rodong.rep.kp/en/index.php', 'rodong.rep.kp/ko/index.php', 'rodong.rep.kp/cn', 'rodong.rep.kp/en', 'rodong.rep.kp/ko'],
-        target: '/news',
-    },
+    radar: [
+        {
+            source: ['rodong.rep.kp/cn/index.php', 'rodong.rep.kp/en/index.php', 'rodong.rep.kp/ko/index.php', 'rodong.rep.kp/cn', 'rodong.rep.kp/en', 'rodong.rep.kp/ko'],
+            target: '/news',
+        },
+    ],
     name: 'News',
     maintainers: ['TonyRL'],
     handler,
     url: 'rodong.rep.kp/cn/index.php',
     description: `| 조선어 | English | 中文 |
-  | ------ | ------- | ---- |
-  | ko     | en      | cn   |`,
+| ------ | ------- | ---- |
+| ko     | en      | cn   |`,
 };
 
 async function handler(ctx) {

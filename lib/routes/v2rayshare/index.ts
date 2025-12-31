@@ -1,13 +1,15 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got'; // 自订的 got
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['v2rayshare.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['v2rayshare.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['77taibai'],
     handler,

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['greasyfork.org/:language/scripts/:script/versions'],
-    },
+    radar: [
+        {
+            source: ['greasyfork.org/:language/scripts/:script/versions'],
+        },
+    ],
     name: 'Script Version History',
     maintainers: ['miles170'],
     handler,
@@ -35,7 +38,7 @@ async function handler(ctx) {
         link: currentUrl,
         description: $('meta[name=description]').attr('content'),
         item: $('.history_versions li')
-            .get()
+            .toArray()
             .map((item) => {
                 item = $(item);
                 const versionNumberLink = item.find('.version-number a');

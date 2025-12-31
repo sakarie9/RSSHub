@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['developer.android.com/studio/releases/platform-tools', 'developer.android.com/'],
-    },
+    radar: [
+        {
+            source: ['developer.android.com/studio/releases/platform-tools', 'developer.android.com/'],
+        },
+    ],
     name: 'SDK Platform Tools release notes',
     maintainers: ['nczitzk'],
     handler,

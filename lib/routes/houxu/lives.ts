@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['houxu.app/lives/:id', 'houxu.app/'],
-    },
+    radar: [
+        {
+            source: ['houxu.app/lives/:id', 'houxu.app/'],
+        },
+    ],
     name: 'Live',
     maintainers: ['nczitzk'],
     handler,

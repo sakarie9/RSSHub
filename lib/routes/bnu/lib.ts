@@ -1,15 +1,18 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/lib/:category?',
-    radar: {
-        source: ['www.lib.bnu.edu.cn/:category/index.htm'],
-        target: '/lib/:category',
-    },
+    radar: [
+        {
+            source: ['www.lib.bnu.edu.cn/:category/index.htm'],
+            target: '/lib/:category',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['TonyRL'],
     handler,

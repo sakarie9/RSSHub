@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
-import { parseDate } from '@/utils/parse-date';
 import MarkdownIt from 'markdown-it';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
+
 const md = MarkdownIt({
     html: true,
 });
@@ -20,9 +22,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['imagemagick.org/script/download.php', 'imagemagick.org/script', 'imagemagick.org/'],
-    },
+    radar: [
+        {
+            source: ['imagemagick.org/script/download.php', 'imagemagick.org/script', 'imagemagick.org/'],
+        },
+    ],
     name: 'Changelog',
     maintainers: ['nczitzk'],
     handler,

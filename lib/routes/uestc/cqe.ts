@@ -1,5 +1,7 @@
-import { Route } from '@/types';
 import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import { parseDate } from '@/utils/parse-date';
 import puppeteer from '@/utils/puppeteer';
 
@@ -28,27 +30,29 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cqe.uestc.edu.cn/'],
-        target: '/cqe',
-    },
+    radar: [
+        {
+            source: ['cqe.uestc.edu.cn/'],
+            target: '/cqe',
+        },
+    ],
     name: '文化素质教育中心',
     maintainers: ['truobel', 'mobyw'],
     handler,
     url: 'cqe.uestc.edu.cn/',
     description: `| 活动预告 | 通知公告 |
-  | -------- | -------- |
-  | hdyg     | tzgg     |`,
+| -------- | -------- |
+| hdyg     | tzgg     |`,
 };
 
 async function handler(ctx) {
     const type = ctx.req.param('type') || 'tzgg';
     const pageUrl = mapUrl[type];
     if (!pageUrl) {
-        throw new Error('type not supported');
+        throw new InvalidParameterError('type not supported');
     }
 
-    const browser = await puppeteer({ stealth: true });
+    const browser = await puppeteer();
     const page = await browser.newPage();
     await page.setRequestInterception(true);
     page.on('request', (request) => {
@@ -65,7 +69,8 @@ async function handler(ctx) {
     const items = $('div.Newslist li');
 
     const out = $(items)
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
             const newsTitle = item.find('a').attr('title');
             const newsLink = baseUrl + item.find('a').attr('href').slice(3);
@@ -76,8 +81,7 @@ async function handler(ctx) {
                 link: newsLink,
                 pubDate: newsPubDate,
             };
-        })
-        .get();
+        });
 
     return {
         title: `大学生文化素质教育中心-${mapTitle[type]}`,

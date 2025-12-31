@@ -1,7 +1,7 @@
-import { Route } from '@/types';
+import { config } from '@/config';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { config } from '@/config';
 
 const XIAOYUZHOU_ITEMS = 'xiaoyuzhou_items';
 
@@ -81,10 +81,12 @@ const ProcessFeed = async () => {
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['xiaoyuzhoufm.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['xiaoyuzhoufm.com/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['prnake', 'Maecenas'],
     handler,

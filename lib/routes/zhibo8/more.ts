@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const categories = {
     nba: 'NBA',
@@ -25,11 +26,17 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['news.zhibo8.cc/:category'],
-        target: '/more/:category',
-    },
-    name: 'Unknown',
+    radar: [
+        {
+            source: ['news.zhibo8.cc/:category'],
+            target: '/more/:category',
+        },
+    ],
+    name: '滚动新闻',
+    description: `
+| NBA | 足球  | 电竞     | 综合   |
+| --- | ----- | -------- | ------ |
+| nba | zuqiu | dianjing | zonghe |`,
     maintainers: ['nczitzk'],
     handler,
 };

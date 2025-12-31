@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,16 +18,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.mem.gov.cn/gk/sgcc/:category'],
-        target: '/mem/gk/sgcc/:category',
-    },
+    radar: [
+        {
+            source: ['www.mem.gov.cn/gk/sgcc/:category'],
+            target: '/mem/gk/sgcc/:category',
+        },
+    ],
     name: '事故及灾害查处',
     maintainers: ['nczitzk'],
     handler,
     description: `| 挂牌督办 | 调查报告   |
-  | -------- | ---------- |
-  | sggpdbqk | tbzdsgdcbg |`,
+| -------- | ---------- |
+| sggpdbqk | tbzdsgdcbg |`,
 };
 
 async function handler(ctx) {
@@ -47,7 +50,7 @@ async function handler(ctx) {
         .map((item) => {
             item = $(item);
 
-            const regExp = new RegExp(`\\/sgcc\\/${category}\\/\\.\\.\\.`);
+            const regExp = new RegExp(String.raw`\/sgcc\/${category}\/\.\.\.`);
             const link = new URL(`${category}/${item.prop('href').replace(/\.\//, '')}`, currentUrl).href.replace(regExp, '');
 
             return {

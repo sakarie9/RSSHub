@@ -1,9 +1,12 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
+import pMap from 'p-map';
+
 import { config } from '@/config';
-import utils from './utils';
+import ConfigNotFoundError from '@/errors/types/config-not-found';
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
 import { parseDate } from '@/utils/parse-date';
-import asyncPool from 'tiny-async-pool';
+
+import utils from './utils';
 
 export const route: Route = {
     path: '/subscriptions/:embed?',
@@ -29,16 +32,13 @@ export const route: Route = {
                 description: '',
             },
         ],
-        requirePuppeteer: false,
-        antiCrawler: false,
-        supportBT: false,
-        supportPodcast: false,
-        supportScihub: false,
     },
-    radar: {
-        source: ['www.youtube.com/feed/subscriptions', 'www.youtube.com/feed/channels'],
-        target: '/subscriptions',
-    },
+    radar: [
+        {
+            source: ['www.youtube.com/feed/subscriptions', 'www.youtube.com/feed/channels'],
+            target: '/subscriptions',
+        },
+    ],
     name: 'Subscriptions',
     maintainers: ['TonyRL'],
     handler,
@@ -47,24 +47,16 @@ export const route: Route = {
 
 async function handler(ctx) {
     if (!config.youtube || !config.youtube.key || !config.youtube.clientId || !config.youtube.clientSecret || !config.youtube.refreshToken) {
-        throw new Error('YouTube RSS is disabled due to the lack of <a href="https://docs.rsshub.app/install/#pei-zhi-bu-fen-rss-mo-kuai-pei-zhi">relevant config</a>');
+        throw new ConfigNotFoundError('YouTube RSS is disabled due to the lack of <a href="https://docs.rsshub.app/deploy/config#route-specific-configurations">relevant config</a>');
     }
     const embed = !ctx.req.param('embed');
 
     const channelIds = (await utils.getSubscriptions('snippet', cache)).data.items.map((item) => item.snippet.resourceId.channelId);
 
-    const playlistIds = [];
-    for await (const playlistId of asyncPool(30, channelIds, async (channelId) => (await utils.getChannelWithId(channelId, 'contentDetails', cache)).data.items[0].contentDetails.relatedPlaylists.uploads)) {
-        playlistIds.push(playlistId);
-    }
+    const playlistIds = await pMap(channelIds, async (channelId) => (await utils.getChannelWithId(channelId, 'contentDetails', cache)).data.items[0].contentDetails.relatedPlaylists.uploads, { concurrency: 30 });
 
-    let items = [];
-    for await (const item of asyncPool(30, playlistIds, async (playlistId) => (await utils.getPlaylistItems(playlistId, 'snippet', cache))?.data.items)) {
-        items.push(item);
-    }
+    let items = await pMap(playlistIds, async (playlistId) => (await utils.getPlaylistItems(playlistId, 'snippet', cache))?.data.items, { concurrency: 30 });
 
-    // https://measurethat.net/Benchmarks/Show/7223
-    // concat > reduce + concat >>> flat
     items = items.flat();
 
     items = items
@@ -79,20 +71,21 @@ async function handler(ctx) {
                 pubDate: parseDate(snippet.publishedAt),
                 link: `https://www.youtube.com/watch?v=${videoId}`,
                 author: snippet.videoOwnerChannelTitle,
+                image: img.url,
             };
         });
 
-    return {
+    const ret = {
         title: 'Subscriptions - YouTube',
         description: 'YouTube Subscriptions',
+        link: 'www.youtube.com/feed/subscriptions',
         item: items,
     };
 
     ctx.set('json', {
-        title: 'Subscriptions - YouTube',
-        description: 'YouTube Subscriptions',
+        ...ret,
         channelIds,
         playlistIds,
-        item: items,
     });
+    return ret;
 }

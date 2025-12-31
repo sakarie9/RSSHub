@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
@@ -16,10 +16,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.cea.gov.cn/cea/xwzx/zqsd/index.html', 'www.cea.gov.cn/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['www.cea.gov.cn/cea/xwzx/zqsd/index.html', 'www.cea.gov.cn/'],
+            target: '',
+        },
+    ],
     name: '中国地震局',
     maintainers: ['LogicJake'],
     handler,

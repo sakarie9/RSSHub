@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import MarkdownIt from 'markdown-it';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import MarkdownIt from 'markdown-it';
 
 export const route: Route = {
     path: '/questions/:id',
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['lanqiao.cn/questions/', 'lanqiao.cn/questions/topics/:id'],
-    },
+    radar: [
+        {
+            source: ['lanqiao.cn/questions/', 'lanqiao.cn/questions/topics/:id'],
+        },
+    ],
     name: '技术社区',
     maintainers: ['huhuhang'],
     handler,

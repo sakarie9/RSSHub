@@ -1,10 +1,7 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderGoods } from './templates/goods';
 
 const base_url = 'https://m.xiaomiyoupin.com';
 export const route: Route = {
@@ -20,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xiaomiyoupin.com/'],
-    },
+    radar: [
+        {
+            source: ['xiaomiyoupin.com/'],
+        },
+    ],
     name: '小米有品众筹',
     maintainers: ['bigfei'],
     handler,
@@ -55,7 +54,7 @@ async function handler() {
         return {
             title: goods.name,
             guid: `xiaomiyoupin:${goods.gid}`,
-            description: art(path.join(__dirname, 'templates/goods.art'), goods),
+            description: renderGoods(goods),
             link: goods.jump_url,
             pubDate: new Date(goods.fist_release_time * 1000).toUTCString(),
         };

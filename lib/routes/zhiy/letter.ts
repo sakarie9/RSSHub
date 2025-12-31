@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { baseUrl, fetchUserDate } from './utils';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['zhiy.cc/:author'],
-    },
+    radar: [
+        {
+            source: ['zhiy.cc/:author'],
+        },
+    ],
     name: 'Newsletter',
     maintainers: ['TonyRL'],
     handler,

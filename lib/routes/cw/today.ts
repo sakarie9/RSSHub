@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import { baseUrl, parsePage } from './utils';
+import type { Route } from '@/types';
 import puppeteer from '@/utils/puppeteer';
+
+import { baseUrl, parsePage } from './utils';
 
 export const route: Route = {
     path: '/today',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cw.com.tw/today', 'cw.com.tw/'],
-    },
+    radar: [
+        {
+            source: ['cw.com.tw/today', 'cw.com.tw/'],
+        },
+    ],
     name: '最新上線',
     maintainers: ['TonyRL'],
     handler,

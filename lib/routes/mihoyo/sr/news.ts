@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const categories = {
     'zh-cn': {
@@ -56,19 +57,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['sr.mihoyo.com/news'],
-        target: '/sr',
-    },
+    radar: [
+        {
+            source: ['sr.mihoyo.com/news'],
+            target: '/sr',
+        },
+    ],
     name: '崩坏：星穹铁道',
     maintainers: ['shinanory'],
     handler,
     url: 'sr.mihoyo.com/news',
     description: `#### 新闻 {#mi-ha-you-beng-huai-xing-qiong-tie-dao-xin-wen}
 
-  | 最新     | 新闻 | 公告   | 活动     |
-  | -------- | ---- | ------ | -------- |
-  | news-all | news | notice | activity |`,
+| 最新     | 新闻 | 公告   | 活动     |
+| -------- | ---- | ------ | -------- |
+| news-all | news | notice | activity |`,
 };
 
 async function handler(ctx) {
@@ -86,7 +89,7 @@ async function handler(ctx) {
         title: item.sTitle,
         description: item.sContent,
         link: `${categories[location].link}/${item.iInfoId}`,
-        pubDate: parseDate(item.dtStartTime),
+        pubDate: timezone(parseDate(item.dtStartTime), +8),
         category: item.sCategoryName,
     }));
 

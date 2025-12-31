@@ -1,15 +1,19 @@
-import { Route } from '@/types';
+import MarkdownIt from 'markdown-it';
+
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import MarkdownIt from 'markdown-it';
+
 const md = MarkdownIt();
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['hackertalk.net/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['hackertalk.net/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['hyoban'],
     handler,

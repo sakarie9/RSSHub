@@ -1,15 +1,29 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/chongqing/gzw/:category{.+}?',
-    name: 'Unknown',
-    maintainers: [],
+    parameters: {
+        category: '分类，见下表，默认为通知公告',
+    },
+    name: '重庆市人民政府 国有资产监督管理委员会',
+    url: 'gzw.cq.gov.cn',
+    maintainers: ['nczitzk'],
     handler,
+    radar: [
+        {
+            source: 'gzw.cq.gov.cn/*category',
+            target: '/chongqing/gzw/*category',
+        },
+    ],
+    description: `| 通知公告  | 国企资讯 | 国企简介 | 国企招聘 |
+| --------- | -------- | -------- | -------- |
+| tzgg\_191 | gqdj     | gqjj     | gqzp     |`,
 };
 
 async function handler(ctx) {

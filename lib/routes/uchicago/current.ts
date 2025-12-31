@@ -1,10 +1,11 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
 import { load } from 'cheerio';
-import { parseDate } from '@/utils/parse-date';
-import { getCookies, setCookies } from '@/utils/puppeteer-utils';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
 import logger from '@/utils/logger';
+import { parseDate } from '@/utils/parse-date';
 import puppeteer from '@/utils/puppeteer';
+import { getCookies, setCookies } from '@/utils/puppeteer-utils';
 
 export const route: Route = {
     path: '/journals/current/:journal',
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['journals.uchicago.edu/toc/:journal/current', 'journals.uchicago.edu/journal/:journal'],
-    },
+    radar: [
+        {
+            source: ['journals.uchicago.edu/toc/:journal/current', 'journals.uchicago.edu/journal/:journal'],
+        },
+    ],
     name: 'Current Issue',
     maintainers: ['TonyRL'],
     handler,
@@ -44,7 +47,7 @@ async function handler(ctx) {
     });
     const response = await page.evaluate(() => document.documentElement.innerHTML);
     const cookies = await getCookies(page);
-    page.close();
+    await page.close();
     const $ = load(response);
 
     const list = $('.issue-item__title')
@@ -66,7 +69,7 @@ async function handler(ctx) {
                     referer: link,
                 });
                 const response = await page.evaluate(() => document.documentElement.innerHTML);
-                page.close();
+                await page.close();
 
                 const $ = load(response);
 
@@ -92,7 +95,7 @@ async function handler(ctx) {
         )
     );
 
-    browser.close();
+    await browser.close();
 
     return {
         title: $('head title').text(),

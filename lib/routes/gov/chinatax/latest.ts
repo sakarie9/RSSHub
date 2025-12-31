@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 
 export const route: Route = {
     path: '/chinatax/latest',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.chinatax.gov.cn/*'],
-    },
+    radar: [
+        {
+            source: ['www.chinatax.gov.cn/*'],
+        },
+    ],
     name: '最新文件',
     maintainers: ['nczitzk', 'fuzy112'],
     handler,
@@ -35,15 +38,15 @@ async function handler() {
     const $ = load(response.data);
     const list = $('ul.list.whlist li')
         .slice(0, 10)
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
             const a = item.find('a');
             return {
                 title: a.text(),
                 link: new URL(a.attr('href'), `http://www.chinatax.gov.cn`).toString(),
             };
-        })
-        .get();
+        });
     const items = await Promise.all(
         list.map((item) =>
             cache.tryGet(item.link, async () => {
@@ -54,7 +57,7 @@ async function handler() {
                     item.description = content('#fontzoom').html();
                     return item;
                 } catch (error) {
-                    if (error.name === 'HTTPError') {
+                    if (error.name === 'HTTPError' || error.name === 'FetchError') {
                         item.description = error.message;
                         return item;
                     }

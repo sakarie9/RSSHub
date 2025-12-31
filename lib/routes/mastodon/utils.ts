@@ -1,9 +1,10 @@
+import { config } from '@/config';
+import ConfigNotFoundError from '@/errors/types/config-not-found';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { config } from '@/config';
 
-const allowSiteList = ['mastodon.social', 'pawoo.net', config.mastodon.apiHost].filter(Boolean);
+const allowSiteList = ['mastodon.social', 'pawoo.net', 'fosstodon.org', config.mastodon.apiHost].filter(Boolean);
 
 const apiHeaders = (site) => {
     const { accessToken, apiHost } = config.mastodon;
@@ -93,41 +94,46 @@ async function getAccountIdByAcct(acct) {
     const site = mastodonConfig.apiHost || acctHost;
     const acctDomain = mastodonConfig.acctDomain || acctHost;
     if (!(site && acctDomain)) {
-        throw new Error('Mastodon RSS is disabled due to the lack of <a href="https://docs.rsshub.app/en/install/#configuration-route-specific-configurations">relevant config</a>');
+        throw new ConfigNotFoundError('Mastodon RSS is disabled due to the lack of <a href="https://docs.rsshub.app/deploy/config#route-specific-configurations">relevant config</a>');
     }
     if (!config.feature.allow_user_supply_unsafe_domain && !allowSiteList.includes(site)) {
-        throw new Error(`RSS for this domain is disabled unless 'ALLOW_USER_SUPPLY_UNSAFE_DOMAIN' is set to 'true' or 'MASTODON_API_HOST' is set.`);
+        throw new ConfigNotFoundError(`RSS for this domain is disabled unless 'ALLOW_USER_SUPPLY_UNSAFE_DOMAIN' is set to 'true' or 'MASTODON_API_HOST' is set.`);
     }
 
     const search_url = `https://${site}/api/v2/search`;
     const cacheUid = `mastodon_acct_id/${site}/${acct}`;
 
-    const account_id = await cache.tryGet(cacheUid, async () => {
-        const search_response = await got({
-            method: 'get',
-            url: search_url,
-            headers: apiHeaders(site),
-            searchParams: {
-                q: acct,
-                type: 'accounts',
-            },
-        });
-        const [acctUser, acctHost] = acct.split('@').filter(Boolean);
-        let acctOnServer;
+    const account_id = await cache.tryGet(
+        cacheUid,
+        async () => {
+            const search_response = await got({
+                method: 'get',
+                url: search_url,
+                headers: apiHeaders(site),
+                searchParams: {
+                    q: acct,
+                    type: 'accounts',
+                },
+            });
+            const [acctUser, acctHost] = acct.split('@').filter(Boolean);
+            let acctOnServer;
 
-        if (acctHost) {
-            acctOnServer = acctHost === acctDomain ? acctUser : acctUser + '@' + acctHost;
-        } else {
-            acctOnServer = acctUser;
-        }
+            if (acctHost) {
+                acctOnServer = acctHost === acctDomain ? acctUser : acctUser + '@' + acctHost;
+            } else {
+                acctOnServer = acctUser;
+            }
 
-        const accountData = search_response.data.accounts.filter((item) => item.acct === acctOnServer);
+            const accountData = search_response.data.accounts.filter((item) => item.acct === acctOnServer);
 
-        if (accountData.length === 0) {
-            throw new Error(`acct ${acct} not found`);
-        }
-        return accountData[0].id;
-    });
+            if (accountData.length === 0) {
+                throw new Error(`acct ${acct} not found`);
+            }
+            return accountData[0].id;
+        },
+        config.cache.contentExpire,
+        false
+    );
     return { site, account_id };
 }
 

@@ -1,8 +1,8 @@
-import { Route } from '@/types';
+import { config } from '@/config';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { config } from '@/config';
 
 export const route: Route = {
     path: '/blog',
@@ -17,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['delta.io/blog'],
-    },
+    radar: [
+        {
+            source: ['delta.io/blog'],
+        },
+    ],
     name: 'Blogs',
     maintainers: ['RengarLee'],
     handler,

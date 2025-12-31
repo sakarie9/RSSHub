@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import * as cheerio from 'cheerio';
-import timezone from '@/utils/timezone';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
+import got from '@/utils/got';
+import timezone from '@/utils/timezone';
+
 export const route: Route = {
     path: '/pjsekai/news',
     categories: ['game'],
@@ -16,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['pjsekai.sega.jp/news/index.html'],
-    },
+    radar: [
+        {
+            source: ['pjsekai.sega.jp/news/index.html'],
+        },
+    ],
     name: '世界计划 多彩舞台 ｜ ProjectSekai ｜ プロセカ',
     maintainers: ['15x15G'],
     handler,

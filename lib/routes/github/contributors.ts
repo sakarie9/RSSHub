@@ -1,6 +1,6 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { config } from '@/config';
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/contributors/:user/:repo/:order?/:anon?',
@@ -15,10 +15,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['github.com/:user/:repo/graphs/contributors', 'github.com/:user/:repo'],
-        target: '/contributors/:user/:repo',
-    },
+    radar: [
+        {
+            source: ['github.com/:user/:repo/graphs/contributors', 'github.com/:user/:repo'],
+            target: '/contributors/:user/:repo',
+        },
+    ],
     name: 'Repo Contributors',
     maintainers: ['zoenglinghou'],
     handler,
@@ -50,7 +52,7 @@ async function handler(ctx) {
         const url_base = last_page_link.match(/<(.*)page=\d*/)[1];
         const page_count = Number(last_page_link.match(/page=(\d*)/)[1]);
 
-        const generate_array = (n) => [...Array(n - 1)].map((_, index) => index + 2);
+        const generate_array = (n) => Array.from({ length: n - 1 }).map((_, index) => index + 2);
         const page_array = generate_array(page_count);
 
         // Get everypage

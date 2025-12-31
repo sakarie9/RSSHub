@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate, parseRelativeDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['my.oschina.net/u/:uid'],
-    },
+    radar: [
+        {
+            source: ['my.oschina.net/u/:uid'],
+        },
+    ],
     name: '数字型账号用户博客',
     maintainers: [],
     handler,
@@ -67,7 +70,7 @@ async function handler(ctx) {
     return {
         title: author + '的博客',
         description: $('.user-text .user-signature').text(),
-        link: `https://my.oschina.net/${id ?? uid}`,
+        link: `https://my.oschina.net/u/${id ?? uid}`,
         item: resultItem,
     };
 }

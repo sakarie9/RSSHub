@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
+
 import { baseUrl, fixImage, fixVideo } from './utils';
 
 export const route: Route = {
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['pikabu.ru/:name'],
-    },
+    radar: [
+        {
+            source: ['pikabu.ru/:name'],
+        },
+    ],
     name: 'User',
     maintainers: ['TonyRL'],
     handler,

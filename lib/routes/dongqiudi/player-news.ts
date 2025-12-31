@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -6,14 +7,12 @@ export const route: Route = {
     categories: ['new-media'],
     example: '/dongqiudi/player_news/50000339',
     parameters: { id: '球员 id, 可在[懂球帝数据](https://www.dongqiudi.com/data)中通过其队伍找到' },
-    features: {
-        requireConfig: false,
-        requirePuppeteer: false,
-        antiCrawler: true,
-        supportBT: false,
-        supportPodcast: false,
-        supportScihub: false,
-    },
+    radar: [
+        {
+            source: ['www.dongqiudi.com/player/*id'],
+            target: (params) => `/dongqiudi/player_news/${params.id.replace('.html', '')}`,
+        },
+    ],
     name: '球员新闻',
     maintainers: ['HenryQW'],
     handler,

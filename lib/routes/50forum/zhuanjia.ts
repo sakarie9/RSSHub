@@ -1,16 +1,19 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['50forum.org.cn/home/article/index/category/zhuanjia.html', '50forum.org.cn/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['50forum.org.cn/home/article/index/category/zhuanjia.html', '50forum.org.cn/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['sddiky'],
     handler,

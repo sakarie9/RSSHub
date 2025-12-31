@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const host = 'https://yz.chsi.com.cn';
 
@@ -20,19 +21,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yz.chsi.com.cn/kyzx/:type'],
-    },
+    radar: [
+        {
+            source: ['yz.chsi.com.cn/kyzx/:type'],
+        },
+    ],
     name: '考研资讯',
     maintainers: ['yanbot-team'],
     handler,
     description: `| \`:type\` | 专题名称 |
-  | ------- | -------- |
-  | fstj    | 复试调剂 |
-  | kydt    | 考研动态 |
-  | zcdh    | 政策导航 |
-  | kyrw    | 考研人物 |
-  | jyxd    | 经验心得 |`,
+| ------- | -------- |
+| fstj    | 复试调剂 |
+| kydt    | 考研动态 |
+| zcdh    | 政策导航 |
+| kyrw    | 考研人物 |
+| jyxd    | 经验心得 |`,
 };
 
 async function handler(ctx) {

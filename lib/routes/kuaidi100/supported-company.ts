@@ -1,4 +1,5 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
+
 import utils from './utils';
 
 export const route: Route = {
@@ -14,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['kuaidi100.com/'],
-    },
+    radar: [
+        {
+            source: ['kuaidi100.com/'],
+        },
+    ],
     name: '支持的快递公司列表',
     maintainers: ['NeverBehave'],
     handler,

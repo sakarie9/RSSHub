@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/recent-releases',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['developer.anitaku.to/'],
-    },
+    radar: [
+        {
+            source: ['developer.anitaku.to/'],
+        },
+    ],
     name: 'Recent Releases',
     maintainers: ['user4302'],
     handler,

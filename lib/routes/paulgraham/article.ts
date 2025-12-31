@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,11 +18,13 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['paulgraham.com/articles.html'],
-    },
+    radar: [
+        {
+            source: ['paulgraham.com/articles.html'],
+        },
+    ],
     name: 'Essays',
-    maintainers: ['Maecenas', 'nczitzk'],
+    maintainers: ['Maecenas', 'nczitzk', 'dvorak0'],
     handler,
     url: 'paulgraham.com/articles.html',
 };
@@ -29,7 +32,7 @@ export const route: Route = {
 async function handler(ctx) {
     const limit = ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit'), 10) : 30;
 
-    const rootUrl = 'http://paulgraham.com';
+    const rootUrl = 'https://paulgraham.com';
     const currentUrl = new URL('articles.html', rootUrl).href;
 
     const { data: response } = await got(currentUrl);

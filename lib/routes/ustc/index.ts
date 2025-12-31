@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -40,17 +41,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['ustc.edu.cn/'],
-        target: '/news',
-    },
+    radar: [
+        {
+            source: ['ustc.edu.cn/'],
+            target: '/news',
+        },
+    ],
     name: '官网通知公告',
     maintainers: ['hang333', 'jasongzy'],
     handler,
     url: 'ustc.edu.cn/',
     description: `| 教学类 | 科研类 | 管理类 | 服务类 |
-  | ------ | ------ | ------ | ------ |
-  | jx     | ky     | gl     | fw     |`,
+| ------ | ------ | ------ | ------ |
+| jx     | ky     | gl     | fw     |`,
 };
 
 async function handler(ctx) {
@@ -68,16 +71,16 @@ async function handler(ctx) {
 
     const $ = load(response.data);
     let items = $('table[portletmode=simpleList] > tbody > tr.light')
-        .map(function () {
-            const child = $(this).children();
+        .toArray()
+        .map((element) => {
+            const child = $(element).children();
             const info = {
                 title: $(child[1]).find('a').attr('title'),
                 link: $(child[1]).find('a').attr('href').startsWith('../') ? new URL($(child[1]).find('a').attr('href'), notice_type[type].url).href : $(child[1]).find('a').attr('href'),
                 pubDate: timezone(parseDate($(child[2]).text(), 'YYYY-MM-DD'), +8),
             };
             return info;
-        })
-        .get();
+        });
 
     items = await Promise.all(
         items

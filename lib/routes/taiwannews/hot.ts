@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,10 +19,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['taiwannews.com.tw/:lang/index'],
-        target: '/hot/:lang',
-    },
+    radar: [
+        {
+            source: ['taiwannews.com.tw/:lang/index'],
+            target: '/hot/:lang',
+        },
+    ],
     name: 'Hot News',
     maintainers: ['TonyRL'],
     handler,

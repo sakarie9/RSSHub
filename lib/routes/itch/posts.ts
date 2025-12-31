@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['itch.io/t/:topic/:id'],
-    },
+    radar: [
+        {
+            source: ['itch.io/t/:topic/:id'],
+        },
+    ],
     name: 'Posts',
     maintainers: ['nczitzk'],
     handler,

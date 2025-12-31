@@ -1,10 +1,12 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+import iconv from 'iconv-lite';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
-import iconv from 'iconv-lite';
+import timezone from '@/utils/timezone';
 import { isValidHost } from '@/utils/valid-host';
 
 const setCookie = function (cookieName, cookieValue, seconds, path, domain, secure) {
@@ -33,26 +35,26 @@ export const route: Route = {
     maintainers: ['nczitzk'],
     handler,
     description: `| 杭州 | 台州    | 嘉兴    | 宁波   | 湖州   |
-  | ---- | ------- | ------- | ------ | ------ |
-  | www  | taizhou | jiaxing | ningbo | huzhou |
+| ---- | ------- | ------- | ------ | ------ |
+| www  | taizhou | jiaxing | ningbo | huzhou |
 
-  | 绍兴     | 湖州   | 温州    | 金华   | 舟山     |
-  | -------- | ------ | ------- | ------ | -------- |
-  | shaoxing | huzhou | wenzhou | jinhua | zhoushan |
+| 绍兴     | 湖州   | 温州    | 金华   | 舟山     |
+| -------- | ------ | ------- | ------ | -------- |
+| shaoxing | huzhou | wenzhou | jinhua | zhoushan |
 
-  | 衢州   | 丽水   | 义乌 | 萧山     | 余杭   |
-  | ------ | ------ | ---- | -------- | ------ |
-  | quzhou | lishui | yiwu | xiaoshan | yuhang |
+| 衢州   | 丽水   | 义乌 | 萧山     | 余杭   |
+| ------ | ------ | ---- | -------- | ------ |
+| quzhou | lishui | yiwu | xiaoshan | yuhang |
 
-  | 临安  | 富阳   | 桐庐   | 建德   | 淳安   |
-  | ----- | ------ | ------ | ------ | ------ |
-  | linan | fuyang | tonglu | jiande | chunan |`,
+| 临安  | 富阳   | 桐庐   | 建德   | 淳安   |
+| ----- | ------ | ------ | ------ | ------ |
+| linan | fuyang | tonglu | jiande | chunan |`,
 };
 
 async function handler(ctx) {
     const city = ctx.req.param('city') ?? 'www';
     if (!isValidHost(city)) {
-        throw new Error('Invalid city');
+        throw new InvalidParameterError('Invalid city');
     }
 
     const rootUrl = `https://${city}.19lou.com`;

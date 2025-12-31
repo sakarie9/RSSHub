@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['kimlaw.or.kr/67', 'kimlaw.or.kr/'],
-    },
+    radar: [
+        {
+            source: ['kimlaw.or.kr/67', 'kimlaw.or.kr/'],
+        },
+    ],
     name: 'Thesis',
     maintainers: ['TonyRL'],
     handler,

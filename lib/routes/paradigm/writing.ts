@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const baseUrl = 'https://www.paradigm.xyz';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['paradigm.xyz/writing'],
-    },
+    radar: [
+        {
+            source: ['paradigm.xyz/writing'],
+        },
+    ],
     name: 'Writing',
     maintainers: ['Fatpandac'],
     handler,

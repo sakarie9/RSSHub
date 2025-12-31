@@ -1,7 +1,7 @@
-import { Route } from '@/types';
+import { config } from '@/config';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { config } from '@/config';
 
 export const route: Route = {
     path: '/platform/:area?/:p_type?/:uid?',
@@ -20,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['show.bilibili.com/platform'],
-    },
+    radar: [
+        {
+            source: ['show.bilibili.com/platform'],
+        },
+    ],
     name: '会员购票务',
     maintainers: ['nightmare-mio'],
     handler,

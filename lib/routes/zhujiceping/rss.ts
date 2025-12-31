@@ -1,15 +1,19 @@
-import { Route } from '@/types';
-import { parseDate } from '@/utils/parse-date';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['zhujiceping.com/'],
-        target: '',
-    },
-    name: 'Unknown',
+    categories: ['blog'],
+    example: '/zhujiceping',
+    radar: [
+        {
+            source: ['zhujiceping.com/'],
+        },
+    ],
+    name: '最新发布',
     maintainers: ['cnkmmk'],
     handler,
     url: 'zhujiceping.com/',
@@ -21,7 +25,8 @@ async function handler() {
     const $ = load(response.data);
 
     const list = $('article.excerpt')
-        .map((i, e) => {
+        .toArray()
+        .map((e) => {
             const element = $(e);
             const title = element.find('h2 > a').attr('title');
             const link = element.find('h2 > a').attr('href');
@@ -34,8 +39,7 @@ async function handler() {
                 link,
                 pubDate: parseDate(dateraw, 'YYYY-MM-DD'),
             };
-        })
-        .get();
+        });
 
     return {
         title: '国外主机测评',

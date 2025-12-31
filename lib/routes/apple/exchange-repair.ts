@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const host = 'https://support.apple.com/';
 
 export const route: Route = {
@@ -18,10 +20,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['support.apple.com/:country/service-programs'],
-        target: '/exchange_repair/:country',
-    },
+    radar: [
+        {
+            source: ['support.apple.com/:country/service-programs'],
+            target: '/exchange_repair/:country',
+        },
+    ],
     name: 'Exchange and Repair Extension Programs',
     maintainers: ['metowolf', 'HenryQW', 'kt286'],
     handler,

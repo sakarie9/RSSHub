@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['cs.scnu.edu.cn/xueshenggongzuo/chengchangfazhan/kejichuangxin/', 'cs.scnu.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['cs.scnu.edu.cn/xueshenggongzuo/chengchangfazhan/kejichuangxin/', 'cs.scnu.edu.cn/'],
+        },
+    ],
     name: '计算机学院竞赛通知',
     maintainers: ['fengkx'],
     handler,

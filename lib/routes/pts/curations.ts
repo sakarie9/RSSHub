@@ -1,12 +1,10 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderDescription } from './templates/description';
 
 export const route: Route = {
     path: '/curations',
@@ -21,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['news.pts.org.tw/curations', 'news.pts.org.tw/'],
-    },
+    radar: [
+        {
+            source: ['news.pts.org.tw/curations', 'news.pts.org.tw/'],
+        },
+    ],
     name: '專題策展',
     maintainers: ['nczitzk'],
     handler,
@@ -54,7 +54,7 @@ async function handler() {
                 title: item.text(),
                 link: item.attr('href'),
                 pubDate: parseDate(projectDiv.find('time').text()),
-                description: art(path.join(__dirname, 'templates/description.art'), {
+                description: renderDescription({
                     image: projectDiv.parent().find('.cover-fit').attr('src'),
                 }),
             };

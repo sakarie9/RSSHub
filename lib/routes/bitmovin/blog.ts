@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -17,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bitmovin.com/blog', 'bitmovin.com/'],
-    },
+    radar: [
+        {
+            source: ['bitmovin.com/blog', 'bitmovin.com/'],
+        },
+    ],
     name: 'Blog',
     maintainers: ['elxy'],
     handler,

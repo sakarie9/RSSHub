@@ -1,5 +1,6 @@
-import { Route } from '@/types';
-import { rootUrl, ProcessItems } from './utils';
+import type { Route } from '@/types';
+
+import { ProcessItems, rootUrl } from './utils';
 
 export const route: Route = {
     path: '/tag/:tag',
@@ -13,10 +14,13 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['95mm.org/'],
-    },
+    radar: [
+        {
+            source: ['95mm.org/'],
+        },
+    ],
     name: '标签',
     maintainers: ['nczitzk'],
     handler,

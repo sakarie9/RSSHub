@@ -1,8 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
+
 const baseURL = 'https://www.tokeninsight.com/';
 const title = 'TokenInsight';
 const link = 'https://www.tokeninsight.com/';
@@ -26,10 +28,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['tokeninsight.com/:lang/latest'],
-        target: '/bulletin/:lang',
-    },
+    radar: [
+        {
+            source: ['tokeninsight.com/:lang/latest'],
+            target: '/bulletin/:lang',
+        },
+    ],
     name: 'Latest',
     maintainers: [],
     handler,

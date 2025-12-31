@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -25,10 +26,12 @@ async function loadContent(link) {
 
 export const route: Route = {
     path: '/news/:type?',
-    radar: {
-        source: ['jseea.cn/webfile/news/:type'],
-        target: '/news/:type',
-    },
+    radar: [
+        {
+            source: ['jseea.cn/webfile/news/:type'],
+            target: '/news/:type',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['schen1024'],
     handler,

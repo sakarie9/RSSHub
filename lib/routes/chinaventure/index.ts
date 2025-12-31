@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -32,17 +33,19 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['chinaventure.com.cn/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['chinaventure.com.cn/'],
+            target: '',
+        },
+    ],
     name: '分类',
     maintainers: ['yuxinliu-alex'],
     handler,
     url: 'chinaventure.com.cn/',
     description: `| 推荐 | 商业深度 | 资本市场 | 5G | 健康 | 教育 | 地产 | 金融 | 硬科技 | 新消费 |
-  | ---- | -------- | -------- | -- | ---- | ---- | ---- | ---- | ------ | ------ |
-  |      | 78       | 80       | 83 | 111  | 110  | 112  | 113  | 114    | 116    |`,
+| ---- | -------- | -------- | -- | ---- | ---- | ---- | ---- | ------ | ------ |
+|      | 78       | 80       | 83 | 111  | 110  | 112  | 113  | 114    | 116    |`,
 };
 
 async function handler(ctx) {
@@ -55,14 +58,12 @@ async function handler(ctx) {
     });
     const $ = load(response.data);
     const list = $('a', '.common_newslist_pc')
-        .filter(function () {
-            return $(this).attr('href');
-        })
-        .map((_, item) => ({
+        .filter((element) => $(element).attr('href'))
+        .toArray()
+        .map((item) => ({
             link: rootUrl + $(item).attr('href'),
         }))
-        .get()
-        .slice(0, ctx.req.query('limit') ? (Number.parseInt(ctx.req.query('limit')) > 20 ? 20 : Number.parseInt(ctx.req.query('limit'))) : 20);
+        .slice(0, ctx.req.query('limit') ? Math.min(Number.parseInt(ctx.req.query('limit')), 20) : 20);
 
     const items = await Promise.all(
         list.map((item) =>

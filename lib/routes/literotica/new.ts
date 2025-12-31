@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,10 +17,13 @@ export const route: Route = {
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
+        nsfw: true,
     },
-    radar: {
-        source: ['literotica.com/'],
-    },
+    radar: [
+        {
+            source: ['literotica.com/'],
+        },
+    ],
     name: 'New Stories',
     maintainers: ['nczitzk'],
     handler,
@@ -38,7 +42,8 @@ async function handler() {
     const $ = load(response.data);
 
     const list = $('.b-46t')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             const a = item.find('.p-48y');
@@ -55,8 +60,7 @@ async function handler() {
                     .replace(/Submitted by/, '')
                     .trim(),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

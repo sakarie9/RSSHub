@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const rootUrl = 'https://www.miit.gov.cn';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['miit.gov.cn/gzcy/yjzj/index.html'],
-    },
+    radar: [
+        {
+            source: ['miit.gov.cn/gzcy/yjzj/index.html'],
+        },
+    ],
     name: '意见征集',
     maintainers: ['Fatpandac'],
     handler,
@@ -35,11 +38,11 @@ async function handler() {
     const cookie = cookieResponse.headers['set-cookie'][0].split(';')[0];
     const indexContent = load(cookieResponse.data);
     const dataRequestUrl = indexContent('div.clist_con > script:nth-child(2)')
-        .map((_, item) => ({
+        .toArray()
+        .map((item) => ({
             url: `${rootUrl}${indexContent(item).attr('url')}`,
             queryData: JSON.parse(indexContent(item).attr('querydata').replaceAll('"', '|').replaceAll("'", '"').replaceAll('|', '"')),
-        }))
-        .get()[0];
+        }))[0];
 
     const dataUrl = `${dataRequestUrl.url}?${Object.keys(dataRequestUrl.queryData)
         .map((key) => `${key}=${dataRequestUrl.queryData[key]}`)
@@ -53,12 +56,12 @@ async function handler() {
     });
     const $ = load(response.data.data.html);
     const list = $('ul > li')
-        .map((_, item) => ({
+        .toArray()
+        .map((item) => ({
             title: $(item).find('a').text(),
             link: new URL($(item).find('a').attr('href'), rootUrl).href,
             pubDate: parseDate($(item).find('span').text(), 'YYYY-MM-DD'),
-        }))
-        .get();
+        }));
 
     const items = await Promise.all(
         list.map((item) =>

@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import parser from '@/utils/rss-parser';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['deepmind.com/blog', 'deepmind.com/'],
-    },
+    radar: [
+        {
+            source: ['deepmind.com/blog', 'deepmind.com/'],
+        },
+    ],
     name: 'Blog',
     maintainers: ['nczitzk', 'TonyRL'],
     handler,

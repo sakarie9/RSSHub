@@ -1,18 +1,17 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
+import { config } from '@/config';
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
-import { config } from '@/config';
+
+import { renderDescription } from './templates/description';
 
 export const route: Route = {
     path: '/:important?',
     categories: ['finance'],
+    view: ViewType.Notifications,
     example: '/jin10',
     parameters: { important: '只看重要，任意值开启，留空关闭' },
     features: {
@@ -23,10 +22,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jin10.com/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['jin10.com/'],
+            target: '',
+        },
+    ],
     name: '市场快讯',
     maintainers: ['laampui'],
     handler,
@@ -67,10 +68,7 @@ async function handler(ctx) {
 
         return {
             title,
-            description: art(path.join(__dirname, 'templates/description.art'), {
-                content,
-                pic: item.data.pic,
-            }),
+            description: renderDescription(content, item.data.pic),
             pubDate: timezone(parseDate(item.time), 8),
             link: item.data.link,
             guid: `jin10:index:${item.id}`,

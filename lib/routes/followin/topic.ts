@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { baseUrl, getBuildId, parseList, parseItem } from './utils';
+
+import { baseUrl, getBuildId, parseItem, parseList } from './utils';
 
 export const route: Route = {
     path: '/topic/:topicId/:lang?',
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['followin.io/:lang/topic/:topicId', 'followin.io/topic/:topicId'],
-    },
+    radar: [
+        {
+            source: ['followin.io/:lang/topic/:topicId', 'followin.io/topic/:topicId'],
+        },
+    ],
     name: 'Topic',
     maintainers: ['TonyRL'],
     handler,

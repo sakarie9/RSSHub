@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -19,16 +20,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['zzb.sz.gov.cn/*'],
-    },
+    radar: [
+        {
+            source: ['zzb.sz.gov.cn/*'],
+        },
+    ],
     name: '深圳市委组织部',
     maintainers: ['zlasd'],
     handler,
     url: 'zzb.sz.gov.cn/*',
     description: `| 通知公告 | 任前公示 | 政策法规 | 工作动态 | 部门预算决算公开 | 业务表格下载 |
-  | :------: | :------: | :------: | :------: | :--------------: | :----------: |
-  |   tzgg   |   rqgs   |   zcfg   |   gzdt   |       xcbd       |     bgxz     |`,
+| :------: | :------: | :------: | :------: | :--------------: | :----------: |
+|   tzgg   |   rqgs   |   zcfg   |   gzdt   |       xcbd       |     bgxz     |`,
 };
 
 async function handler(ctx) {
@@ -47,7 +50,8 @@ async function handler(ctx) {
     const $ = load(response.data);
     const title = $('#Title').text().trim();
     const list = $('#List tbody tr td table tbody tr td[width="96%"]')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             const tag = $(item).find('font a');
             const tag2 = $(item).find('font[size="2px"]');
             return {
@@ -55,8 +59,7 @@ async function handler(ctx) {
                 link: tag.attr('href'),
                 pubDate: timezone(parseDate(tag2.text().trim(), 'YYYY/MM/DD'), 0),
             };
-        })
-        .get();
+        });
 
     return {
         title: '深圳组工在线 - ' + title,

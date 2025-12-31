@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['dwxgb.bnu.edu.cn/:category/:type/index.html'],
-    },
+    radar: [
+        {
+            source: ['dwxgb.bnu.edu.cn/:category/:type/index.html'],
+        },
+    ],
     name: '党委学生工作部',
     maintainers: ['Fatpandac'],
     handler,
@@ -46,7 +49,8 @@ async function handler(ctx) {
     const $ = load(response.data);
 
     const list = $('ul.container.list > li')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             const link = $(item).find('a').attr('href');
             const absoluteLink = new URL(link, currentUrl).href;
             return {
@@ -54,8 +58,7 @@ async function handler(ctx) {
                 pubDate: parseDate($(item).find('span').text()),
                 link: absoluteLink,
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

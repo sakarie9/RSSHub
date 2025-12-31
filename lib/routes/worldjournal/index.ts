@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -9,10 +10,12 @@ const baseUrl = 'https://www.worldjournal.com';
 
 export const route: Route = {
     path: '/:path{.+}?',
-    radar: {
-        source: ['worldjournal.com/wj/*path'],
-        target: '/:path',
-    },
+    radar: [
+        {
+            source: ['worldjournal.com/wj/*path'],
+            target: '/:path',
+        },
+    ],
     name: 'Unknown',
     maintainers: [],
     handler,

@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 const rootUrl = 'https://antibody-software.com';
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['antibody-software.com/wizfile/download'],
-    },
+    radar: [
+        {
+            source: ['antibody-software.com/wizfile/download'],
+        },
+    ],
     name: 'Version History',
     maintainers: ['Fatpandac'],
     handler,
@@ -34,7 +37,8 @@ async function handler() {
     const $ = load(response.data);
 
     const items = $('section.blog-section > div > div > div > h4')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             const title = $(item)
                 .text()
                 .replace(/\(.*?\)/, '');
@@ -53,8 +57,7 @@ async function handler() {
                 pubDate,
                 guid: `${currentUrl}${title}`,
             };
-        })
-        .get();
+        });
 
     return {
         title: `WziFile - 更新日志`,

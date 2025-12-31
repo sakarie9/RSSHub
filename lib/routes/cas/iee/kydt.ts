@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.iee.cas.cn/xwzx/kydt', 'www.iee.cas.cn/'],
-    },
+    radar: [
+        {
+            source: ['www.iee.cas.cn/xwzx/kydt', 'www.iee.cas.cn/'],
+        },
+    ],
     name: '电工研究所 科研动态',
     maintainers: ['nczitzk'],
     handler,

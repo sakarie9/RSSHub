@@ -1,8 +1,10 @@
-import { Route } from '@/types';
-import cache from '@/utils/cache';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import cache from '@/utils/cache';
 import buildData from '@/utils/common-config';
+import got from '@/utils/got';
+
 const baseUrl = 'https://www.airchina.com.cn';
 
 export const route: Route = {
@@ -18,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.airchina.com.cn/'],
-    },
+    radar: [
+        {
+            source: ['www.airchina.com.cn/'],
+        },
+    ],
     name: '服务公告',
     maintainers: ['LandonLi'],
     handler,

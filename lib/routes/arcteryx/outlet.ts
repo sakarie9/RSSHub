@@ -1,10 +1,7 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
-
+import type { Route } from '@/types';
 import got from '@/utils/got';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+
+import { renderProductDescription } from './templates/product-description';
 import { generateRssData } from './utils';
 
 export const route: Route = {
@@ -20,27 +17,29 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['outlet.arcteryx.com/:country/en/c/:gender'],
-    },
+    radar: [
+        {
+            source: ['outlet.arcteryx.com/:country/en/c/:gender'],
+        },
+    ],
     name: 'Outlet',
     maintainers: ['EthanWng97'],
     handler,
     description: `Country
 
-  | United States | Canada | United Kingdom |
-  | ------------- | ------ | -------------- |
-  | us            | ca     | gb             |
+| United States | Canada | United Kingdom |
+| ------------- | ------ | -------------- |
+| us            | ca     | gb             |
 
   gender
 
-  | male | female |
-  | ---- | ------ |
-  | mens | womens |
+| male | female |
+| ---- | ------ |
+| mens | womens |
 
-  :::tip
+::: tip
   Parameter \`country\` can be found within the url of \`Arcteryx\` website.
-  :::`,
+:::`,
 };
 
 async function handler(ctx) {
@@ -69,9 +68,7 @@ async function handler(ctx) {
         item: items.map((item) => ({
             title: item.name,
             link: productUrl + item.slug,
-            description: art(path.join(__dirname, 'templates/product-description.art'), {
-                item,
-            }),
+            description: renderProductDescription(item),
         })),
     };
 }

@@ -1,6 +1,6 @@
-import { Route } from '@/types';
-import { parseDate } from '@/utils/parse-date';
+import type { Route } from '@/types';
 import got from '@/utils/got';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/article/:type?',
@@ -15,16 +15,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.zaozao.run/article/:type'],
-        target: '/article/:type',
-    },
+    radar: [
+        {
+            source: ['www.zaozao.run/article/:type'],
+            target: '/article/:type',
+        },
+    ],
     name: '文章',
     maintainers: ['shaomingbo'],
     handler,
     description: `| 精品推荐  | 技术干货 | 职场成长 | 社区动态  | 组件物料 | 行业动态 |
-  | --------- | -------- | -------- | --------- | -------- | -------- |
-  | recommend | quality  | growth   | community | material | industry |`,
+| --------- | -------- | -------- | --------- | -------- | -------- |
+| recommend | quality  | growth   | community | material | industry |`,
 };
 
 async function handler(ctx) {

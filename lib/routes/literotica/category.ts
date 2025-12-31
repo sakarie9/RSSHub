@@ -1,17 +1,23 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/category/:category',
-    radar: {
-        source: ['literotica.com/c/:category', 'literotica.com/'],
-    },
+    radar: [
+        {
+            source: ['literotica.com/c/:category', 'literotica.com/'],
+        },
+    ],
     name: 'Unknown',
     maintainers: ['nczitzk'],
     handler,
+    features: {
+        nsfw: true,
+    },
 };
 
 async function handler(ctx) {
@@ -28,7 +34,8 @@ async function handler(ctx) {
     const $ = load(response.data);
 
     const list = $('.b-slb-item')
-        .map((_, item) => {
+        .toArray()
+        .map((item) => {
             item = $(item);
 
             const a = item.find('h3 a');
@@ -39,8 +46,7 @@ async function handler(ctx) {
                 author: item.find('.b-user-info-name').text(),
                 pubDate: parseDate(item.find('.b-slib-date').text(), 'MM/DD/YY'),
             };
-        })
-        .get();
+        });
 
     const items = await Promise.all(
         list.map((item) =>

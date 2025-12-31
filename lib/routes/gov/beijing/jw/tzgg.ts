@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/beijing/jw/tzgg',
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['jw.beijing.gov.cn/tzgg'],
-    },
+    radar: [
+        {
+            source: ['jw.beijing.gov.cn/tzgg'],
+        },
+    ],
     name: '通知公告',
     maintainers: ['nczitzk'],
     handler,

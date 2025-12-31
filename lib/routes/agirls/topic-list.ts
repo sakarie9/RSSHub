@@ -1,6 +1,8 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
+
 import { baseUrl } from './utils';
 
 export const route: Route = {
@@ -16,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['agirls.aotter.net/', 'agirls.aotter.net/topic'],
-    },
+    radar: [
+        {
+            source: ['agirls.aotter.net/', 'agirls.aotter.net/topic'],
+        },
+    ],
     name: '当前精选主题列表',
     maintainers: ['TonyRL'],
     handler,

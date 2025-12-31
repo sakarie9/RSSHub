@@ -1,8 +1,9 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
-const baseUrl = 'https://www.slowmist.com';
 import { finishArticleItem } from '@/utils/wechat-mp';
+
+const baseUrl = 'https://www.slowmist.com';
 
 export const route: Route = {
     path: '/:type?',
@@ -17,16 +18,18 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['slowmist.com/zh/news.html'],
-    },
+    radar: [
+        {
+            source: ['slowmist.com/zh/news.html'],
+        },
+    ],
     name: '动态',
     maintainers: ['AtlasQuan'],
     handler,
     url: 'slowmist.com/zh/news.html',
     description: `| 公司新闻 | 漏洞披露 | 技术研究 |
-  | -------- | -------- | -------- |
-  | news     | vul      | research |`,
+| -------- | -------- | -------- |
+| news     | vul      | research |`,
 };
 
 async function handler(ctx) {

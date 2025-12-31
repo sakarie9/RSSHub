@@ -1,8 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 
-import { rootUrl, apiSearchRootUrl, generateSignature, processItems, fetchData } from './util';
+import { apiSearchRootUrl, fetchData, generateSignature, processItems, rootUrl } from './util';
 
 export const route: Route = {
     path: '/search/:keyword',
@@ -17,9 +17,11 @@ export const route: Route = {
         supportPodcast: true,
         supportScihub: false,
     },
-    radar: {
-        source: ['huxiu.com/'],
-    },
+    radar: [
+        {
+            source: ['huxiu.com/'],
+        },
+    ],
     name: '搜索',
     maintainers: ['xyqfer', 'HenryQW', 'nczitzk'],
     handler,

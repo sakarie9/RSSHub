@@ -1,6 +1,7 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
-import { rootUrl, ProcessItems } from './utils';
+
+import { ProcessItems, rootUrl } from './utils';
 
 export const route: Route = {
     path: '/latest',
@@ -15,9 +16,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yicai.com/'],
-    },
+    radar: [
+        {
+            source: ['yicai.com/'],
+        },
+    ],
     name: '最新',
     maintainers: ['nczitzk'],
     handler,

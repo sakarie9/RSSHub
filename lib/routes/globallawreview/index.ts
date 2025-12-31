@@ -1,13 +1,16 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/',
-    radar: {
-        source: ['globallawreview.org/Magazine/GetIssueContentList', 'globallawreview.org/'],
-        target: '',
-    },
+    radar: [
+        {
+            source: ['globallawreview.org/Magazine/GetIssueContentList', 'globallawreview.org/'],
+            target: '',
+        },
+    ],
     name: 'Unknown',
     maintainers: ['nczitzk'],
     handler,

@@ -1,9 +1,10 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 
 const host = 'https://www.qlu.edu.cn';
 
@@ -20,9 +21,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['qlu.edu.cn/tzggsh/list1.htm'],
-    },
+    radar: [
+        {
+            source: ['qlu.edu.cn/tzggsh/list1.htm'],
+        },
+    ],
     name: '通知公告',
     maintainers: ['SunBK201'],
     handler,

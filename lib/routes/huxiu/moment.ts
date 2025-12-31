@@ -1,8 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 
-import { rootUrl, apiMomentRootUrl, processItems, fetchData } from './util';
+import { apiMomentRootUrl, fetchData, processItems, rootUrl } from './util';
 
 export const route: Route = {
     path: '/moment',
@@ -17,9 +17,11 @@ export const route: Route = {
         supportPodcast: true,
         supportScihub: false,
     },
-    radar: {
-        source: ['huxiu.com/moment'],
-    },
+    radar: [
+        {
+            source: ['huxiu.com/moment'],
+        },
+    ],
     name: '24 小时',
     maintainers: ['nczitzk'],
     handler,
@@ -29,7 +31,7 @@ export const route: Route = {
 async function handler(ctx) {
     const limit = ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit'), 10) : 20;
 
-    const apiUrl = new URL('web-v2/moment/feed', apiMomentRootUrl).href;
+    const apiUrl = new URL('web-v3/moment/feed', apiMomentRootUrl).href;
     const currentUrl = new URL('moment', rootUrl).href;
 
     const { data: response } = await got.post(apiUrl, {
@@ -38,7 +40,7 @@ async function handler(ctx) {
         },
     });
 
-    const items = await processItems(response.data.moment_list.datalist[0].datalist, limit, cache.tryGet);
+    const items = await processItems(response.data.moment_list.datalist, limit, cache.tryGet);
 
     const data = await fetchData(currentUrl);
 

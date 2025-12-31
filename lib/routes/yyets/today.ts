@@ -1,10 +1,13 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import { ViewType } from '@/types';
+import got from '@/utils/got';
 
 export const route: Route = {
     path: '/today',
     categories: ['multimedia'],
+    view: ViewType.Notifications,
     example: '/yyets/today',
     parameters: {},
     features: {
@@ -15,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yysub.net/tv/schedule', 'yysub.net/'],
-    },
+    radar: [
+        {
+            source: ['yysub.net/tv/schedule', 'yysub.net/'],
+        },
+    ],
     name: '今日播出',
     maintainers: ['bao1991213'],
     handler,
@@ -44,17 +49,13 @@ async function handler() {
     return {
         title: '人人影视-今日播出',
         link: 'https://yysub.net',
-        item:
-            list &&
-            list
-                .map((index, item) => {
-                    item = $(item);
-                    return {
-                        title: item.find('a').first().text(),
-                        link: item.find('a').attr('href'),
-                        guid: item.find('a').first().text(),
-                    };
-                })
-                .get(),
+        item: list.toArray().map((item) => {
+            item = $(item);
+            return {
+                title: item.find('a').first().text(),
+                link: item.find('a').attr('href'),
+                guid: item.find('a').first().text(),
+            };
+        }),
     };
 }

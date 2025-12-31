@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 
 const baseUrl = 'https://www.indiansinkuwait.com';
@@ -19,9 +20,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['indiansinkuwait.com/latest-news', 'indiansinkuwait.com/'],
-    },
+    radar: [
+        {
+            source: ['indiansinkuwait.com/latest-news', 'indiansinkuwait.com/'],
+        },
+    ],
     name: 'News',
     maintainers: ['TonyRL'],
     handler,

@@ -1,8 +1,9 @@
-import { Route } from '@/types';
-import { parseDate } from '@/utils/parse-date';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import md5 from '@/utils/md5';
+import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
     path: '/:level?',
@@ -17,10 +18,12 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['yomujp.com/', 'yomujp.com/:level'],
-        target: '/:level',
-    },
+    radar: [
+        {
+            source: ['yomujp.com/', 'yomujp.com/:level'],
+            target: '/:level',
+        },
+    ],
     name: '等级',
     maintainers: ['eternasuno'],
     handler,
@@ -40,7 +43,8 @@ async function handler(ctx) {
         const description = $('section')
             .slice(2, -2)
             .find('.elementor-widget-text-editor>div,.elementor-widget-image>div>img')
-            .map((_, el) => {
+            .toArray()
+            .map((el) => {
                 if (el.tagName === 'img') {
                     return `<img src=${el.attribs.src} />`;
                 } else if (el.firstChild.tagName === 'p') {
@@ -49,7 +53,6 @@ async function handler(ctx) {
                     return `<p>${$(el).html()}</p>`;
                 }
             })
-            .get()
             .join('');
 
         return {

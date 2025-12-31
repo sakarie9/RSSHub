@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
+
 import { getBoard } from './util';
 
 export const route: Route = {
@@ -17,9 +18,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['xiaohongshu.com/board/:board_id'],
-    },
+    radar: [
+        {
+            source: ['xiaohongshu.com/board/:board_id'],
+        },
+    ],
     name: '专辑',
     maintainers: ['lotosbin'],
     handler,

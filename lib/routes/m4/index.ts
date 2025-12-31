@@ -1,15 +1,14 @@
-import { Route } from '@/types';
-import { getCurrentPath } from '@/utils/helpers';
-const __dirname = getCurrentPath(import.meta.url);
+import { load } from 'cheerio';
 
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { isValidHost } from '@/utils/valid-host';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
-import { art } from '@/utils/render';
-import * as path from 'node:path';
+import timezone from '@/utils/timezone';
+import { isValidHost } from '@/utils/valid-host';
+
+import { renderDescription } from './templates/description';
 
 export const route: Route = {
     path: '/:id?/:category{.+}?',
@@ -21,7 +20,7 @@ export const route: Route = {
 async function handler(ctx) {
     const { id = 'news', category = 'china' } = ctx.req.param();
     if (!isValidHost(id)) {
-        throw new Error('Invalid id');
+        throw new InvalidParameterError('Invalid id');
     }
     const limit = ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit'), 10) : 30;
 
@@ -43,7 +42,7 @@ async function handler(ctx) {
             return {
                 title: a.text(),
                 link: a.prop('href'),
-                description: art(path.join(__dirname, 'templates/description.art'), {
+                description: renderDescription({
                     images: [
                         {
                             src: item.parent().find('div.aimg0 a img').prop('src'),
@@ -67,9 +66,9 @@ async function handler(ctx) {
                 const content = load(detailResponse);
 
                 item.title = content('h1').first().text();
-                item.description = art(path.join(__dirname, 'templates/description.art'), {
+                item.description = renderDescription({
                     intro: content('div.aintro1, p.cont-summary').text(),
-                    description: content('div.content0, div.cont-detail').html(),
+                    description: content('div.content0, div.cont-detail').html() ?? undefined,
                 });
                 item.category = content('span.dd0 a, a[rel="category"]')
                     .toArray()

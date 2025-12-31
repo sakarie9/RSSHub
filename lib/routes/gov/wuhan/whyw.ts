@@ -1,7 +1,8 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
@@ -18,9 +19,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['wuhan.gov.cn/sy/whyw/', 'wuhan.gov.cn/whyw', 'wuhan.gov.cn/'],
-    },
+    radar: [
+        {
+            source: ['wuhan.gov.cn/sy/whyw/', 'wuhan.gov.cn/whyw', 'wuhan.gov.cn/'],
+        },
+    ],
     name: '武汉要闻',
     maintainers: ['nczitzk'],
     handler,

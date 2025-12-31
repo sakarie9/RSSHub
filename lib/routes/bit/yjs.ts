@@ -1,6 +1,7 @@
-import { Route } from '@/types';
-import got from '@/utils/got';
 import { load } from 'cheerio';
+
+import type { Route } from '@/types';
+import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
 export const route: Route = {
@@ -16,9 +17,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['grd.bit.edu.cn/zsgz/zsxx/index.htm', 'grd.bit.edu.cn/'],
-    },
+    radar: [
+        {
+            source: ['grd.bit.edu.cn/zsgz/zsxx/index.htm', 'grd.bit.edu.cn/'],
+        },
+    ],
     name: '研究生院招生信息',
     maintainers: ['shengmaosu'],
     handler,

@@ -1,4 +1,4 @@
-import { Route } from '@/types';
+import type { Route } from '@/types';
 import got from '@/utils/got';
 import { parseDate } from '@/utils/parse-date';
 
@@ -15,9 +15,11 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['wfdf.sport/news/', 'wfdf.sport/'],
-    },
+    radar: [
+        {
+            source: ['wfdf.sport/news/', 'wfdf.sport/'],
+        },
+    ],
     name: 'News',
     maintainers: ['HankChow'],
     handler,

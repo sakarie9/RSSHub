@@ -1,10 +1,13 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import { config } from '@/config';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import utils from './utils';
-import { generateData } from './pin/utils';
 import { parseDate } from '@/utils/parse-date';
+
+import { generateData } from './pin/utils';
+import { header } from './utils';
 
 export const route: Route = {
     path: '/collection/:id/:getAll?',
@@ -12,17 +15,24 @@ export const route: Route = {
     example: '/zhihu/collection/26444956',
     parameters: { id: '收藏夹 id，可在收藏夹页面 URL 中找到', getAll: '获取全部收藏内容，任意值为打开' },
     features: {
-        requireConfig: false,
+        requireConfig: [
+            {
+                name: 'ZHIHU_COOKIES',
+                description: '',
+            },
+        ],
         requirePuppeteer: false,
         antiCrawler: true,
         supportBT: false,
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['www.zhihu.com/collection/:id'],
-        target: '/collection/:id',
-    },
+    radar: [
+        {
+            source: ['www.zhihu.com/collection/:id'],
+            target: '/collection/:id',
+        },
+    ],
     name: '收藏夹',
     maintainers: ['huruji', 'Colin-XKL', 'Fatpandac'],
     handler,
@@ -36,7 +46,8 @@ async function handler(ctx) {
         method: 'get',
         url: `https://www.zhihu.com/api/v4/collections/${id}/items?offset=0&limit=20`,
         headers: {
-            ...utils.header,
+            ...header,
+            cookie: config.zhihu.cookies,
             Referer: `https://www.zhihu.com/collection/${id}`,
         },
     });
@@ -54,7 +65,8 @@ async function handler(ctx) {
                         method: 'get',
                         url: `https://www.zhihu.com/api/v4/collections/${id}/items?offset=${offset}&limit=20`,
                         headers: {
-                            ...utils.header,
+                            ...header,
+                            cookie: config.zhihu.cookies,
                             Referer: `https://www.zhihu.com/collection/${id}`,
                         },
                     });
@@ -70,7 +82,7 @@ async function handler(ctx) {
         method: 'get',
         url: `https://www.zhihu.com/collection/${id}`,
         headers: {
-            ...utils.header,
+            ...header,
             Referer: `https://www.zhihu.com/collection/${id}`,
         },
     });

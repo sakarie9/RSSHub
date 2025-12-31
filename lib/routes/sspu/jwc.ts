@@ -1,15 +1,18 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
 export const route: Route = {
     path: '/jwc/:listId',
-    radar: {
-        source: ['jwc.sspu.edu.cn/jwc/:listId/list.htm'],
-    },
+    radar: [
+        {
+            source: ['jwc.sspu.edu.cn/jwc/:listId/list.htm'],
+        },
+    ],
     name: 'Unknown',
     maintainers: ['TonyRL'],
     handler,

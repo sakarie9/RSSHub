@@ -1,9 +1,11 @@
-import { Route } from '@/types';
+import { load } from 'cheerio';
+
+import InvalidParameterError from '@/errors/types/invalid-parameter';
+import type { Route } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
-import { load } from 'cheerio';
-import timezone from '@/utils/timezone';
 import { parseDate } from '@/utils/parse-date';
+import timezone from '@/utils/timezone';
 import { isValidHost } from '@/utils/valid-host';
 
 export const route: Route = {
@@ -19,19 +21,21 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    radar: {
-        source: ['bendibao.com/'],
-    },
+    radar: [
+        {
+            source: ['bendibao.com/'],
+        },
+    ],
     name: '焦点资讯',
     maintainers: ['nczitzk'],
     handler,
     url: 'bendibao.com/',
     description: `| 城市名 | 缩写 |
-  | ------ | ---- |
-  | 北京   | bj   |
-  | 上海   | sh   |
-  | 广州   | gz   |
-  | 深圳   | sz   |
+| ------ | ---- |
+| 北京   | bj   |
+| 上海   | sh   |
+| 广州   | gz   |
+| 深圳   | sz   |
 
   更多城市请参见 [这里](http://www.bendibao.com/city.htm)
 
@@ -41,7 +45,7 @@ export const route: Route = {
 async function handler(ctx) {
     const city = ctx.req.param('city');
     if (!isValidHost(city)) {
-        throw new Error('Invalid city');
+        throw new InvalidParameterError('Invalid city');
     }
 
     const rootUrl = `http://${city}.bendibao.com`;
